@@ -1,0 +1,1916 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark" data-accent="green" data-density="default">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>善鸡通AI - SHAN JI TONG</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: { extend: { colors: {
+    techBlack: 'rgb(var(--bg-rgb) / <alpha-value>)',
+    cardBlack: 'rgb(var(--card-rgb) / <alpha-value>)',
+    darkGreenCard: 'rgb(var(--elevated-rgb) / <alpha-value>)',
+    neonGreen: 'rgb(var(--accent-rgb) / <alpha-value>)',
+    neonYellow: 'rgb(var(--accent2-rgb) / <alpha-value>)',
+    borderGreen: 'rgb(var(--accent-rgb) / 0.22)'
+  } } }
+}
+</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ---- themes ---- */
+[data-theme="dark"]{--bg-rgb:11 15 12;--card-rgb:18 25 20;--elevated-rgb:22 34 26;--text:#E2E8F0}
+[data-theme="dim"]{--bg-rgb:21 32 43;--card-rgb:25 39 52;--elevated-rgb:32 50 66;--text:#E7ECF0}
+[data-theme="lightsout"]{--bg-rgb:0 0 0;--card-rgb:10 10 10;--elevated-rgb:24 24 24;--text:#E7E9EA}
+[data-theme="light"]{--bg-rgb:243 246 248;--card-rgb:255 255 255;--elevated-rgb:232 238 242;--text:#0F172A;--accent2-rgb:110 130 0}
+/* ---- accents ---- */
+:root{--accent2-rgb:204 255 0}
+[data-accent="green"]{--accent-rgb:0 255 102}
+[data-accent="cyan"]{--accent-rgb:0 229 255}
+[data-accent="purple"]{--accent-rgb:168 85 247}
+[data-accent="pink"]{--accent-rgb:236 72 153}
+[data-accent="orange"]{--accent-rgb:249 115 22}
+[data-accent="blue"]{--accent-rgb:59 130 246}
+[data-theme="light"][data-accent="green"]{--accent-rgb:0 140 60}
+[data-theme="light"][data-accent="cyan"]{--accent-rgb:0 130 160}
+[data-theme="light"][data-accent="purple"]{--accent-rgb:126 34 206}
+[data-theme="light"][data-accent="pink"]{--accent-rgb:190 24 93}
+[data-theme="light"][data-accent="orange"]{--accent-rgb:194 65 12}
+[data-theme="light"][data-accent="blue"]{--accent-rgb:29 78 216}
+html{--accent:rgb(var(--accent-rgb));--bg-elevated:rgb(var(--elevated-rgb));--post-pad:1.25rem}
+html[data-density="compact"]{--post-pad:.75rem}
+html[data-density="comfortable"]{--post-pad:1.75rem}
+
+body{font-family:'Inter','Fira Code','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;background-color:rgb(var(--bg-rgb));color:var(--text);overflow-x:hidden;
+  background-size:40px 40px;background-image:linear-gradient(to right,rgb(var(--accent-rgb)/.04) 1px,transparent 1px),linear-gradient(to bottom,rgb(var(--accent-rgb)/.04) 1px,transparent 1px)}
+textarea,input,select{font-family:'Fira Code','Inter','Noto Sans SC',monospace}
+.mono{font-family:'Fira Code','Noto Sans SC',monospace}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:rgb(var(--bg-rgb))}
+::-webkit-scrollbar-thumb{background:rgb(var(--accent-rgb)/.35);border-radius:3px}
+
+/* light theme: remap the light-gray text utilities */
+[data-theme="light"] .text-gray-100,[data-theme="light"] .text-gray-200,[data-theme="light"] .text-gray-300{color:#0f172a}
+[data-theme="light"] .text-gray-400,[data-theme="light"] .text-gray-500{color:#475569}
+[data-theme="light"] .bg-gradient-to-r.text-black,[data-theme="light"] .text-black{color:#fff}
+
+.post-card{padding:var(--post-pad)}
+.nav-item.active{background:linear-gradient(to right,rgb(var(--accent-rgb)/.2),transparent);color:var(--accent);border:1px solid rgb(var(--accent-rgb)/.22);font-weight:600}
+.bnav-item.active{color:var(--accent)}
+.feed-tab{color:#94a3b8;border-bottom:2px solid transparent}
+.feed-tab.active{color:var(--accent);border-bottom-color:var(--accent);background:rgb(var(--accent-rgb)/.08)}
+.accent-swatch{width:2rem;height:2rem;border-radius:9999px;border:2px solid transparent}
+.accent-swatch.active{border-color:#fff;box-shadow:0 0 0 2px var(--accent)}
+.hashtag{color:rgb(var(--accent2-rgb));cursor:pointer}
+.hashtag:hover{text-decoration:underline}
+.flash{animation:flash 1.6s ease-out 1}
+@keyframes flash{0%{box-shadow:0 0 0 2px var(--accent)}100%{box-shadow:0 0 0 0 transparent}}
+.btn-primary{background:linear-gradient(to right,rgb(var(--accent-rgb)),rgb(var(--accent2-rgb)));color:#000;font-weight:700}
+.btn-primary:hover{box-shadow:0 0 15px rgb(var(--accent-rgb)/.35)}
+[data-theme="light"] .btn-primary{color:#fff}
+@media (prefers-reduced-motion:reduce){.flash{animation:none}*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-neonGreen selection:text-black" style="padding-top:env(safe-area-inset-top)">
+
+<!-- ===== Header ===== -->
+<header class="sticky z-40 bg-cardBlack/85 backdrop-blur border-b border-borderGreen" style="top:env(safe-area-inset-top,0px)">
+  <div class="max-w-7xl mx-auto px-4 lg:px-8 py-3 flex items-center gap-3">
+    <button class="lg:hidden w-9 h-9 rounded-lg border border-borderGreen text-gray-300" onclick="toggleMobileDrawer()" aria-label="打开菜单"><i class="fa-solid fa-bars"></i></button>
+    <button class="flex items-center gap-3 text-left shrink-0" onclick="switchTab('feed')" aria-label="回到首页">
+      <span class="w-10 h-10 rounded-xl bg-gradient-to-br from-neonGreen to-neonYellow p-0.5 block">
+        <span class="w-full h-full rounded-[10px] bg-techBlack flex items-center justify-center text-neonGreen"><i class="fa-solid fa-brain text-lg"></i></span>
+      </span>
+      <span class="hidden sm:block">
+        <span class="block font-bold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-neonGreen to-neonYellow leading-tight">SHAN JI TONG</span>
+        <span class="block text-[10px] text-gray-400 mono tracking-widest">善鸡通AI · 神经网络社群</span>
+      </span>
+    </button>
+    <div class="flex-1 max-w-md mx-auto flex items-center bg-techBlack border border-borderGreen rounded-full px-4 py-1.5 focus-within:border-neonGreen">
+      <i class="fa-solid fa-magnifying-glass text-gray-500 mr-2 text-sm"></i>
+      <input id="global-search-input" type="search" oninput="handleGlobalSearch(this.value)" placeholder="搜索动态、作者或 #话题" aria-label="搜索" class="bg-transparent outline-none text-xs w-full placeholder-gray-500">
+    </div>
+    <button onclick="toggleThemeQuick()" class="w-9 h-9 rounded-lg border border-borderGreen text-gray-300 hover:text-neonGreen shrink-0" aria-label="切换主题"><i id="theme-icon" class="fa-solid fa-moon text-sm"></i></button>
+    <button onclick="openSettings()" class="w-9 h-9 rounded-lg border border-borderGreen text-gray-300 hover:text-neonGreen shrink-0" aria-label="设置"><i class="fa-solid fa-gear text-sm"></i></button>
+  </div>
+</header>
+
+<!-- ===== Mobile drawer ===== -->
+<div id="mobile-drawer-overlay" class="hidden fixed inset-0 z-50 bg-black/60" onclick="toggleMobileDrawer()"></div>
+<aside id="mobile-drawer" class="fixed top-0 left-0 bottom-0 w-72 z-[60] bg-cardBlack border-r border-borderGreen p-4 -translate-x-full transition-transform duration-200 overflow-y-auto" style="padding-top:calc(1rem + env(safe-area-inset-top))" aria-label="菜单">
+  <div class="flex items-center justify-between mb-4"><span class="font-bold text-neonGreen">菜单</span><button onclick="toggleMobileDrawer()" class="text-gray-400" aria-label="关闭菜单"><i class="fa-solid fa-xmark text-lg"></i></button></div>
+  <nav id="nav-drawer" class="space-y-1"></nav>
+  <button onclick="switchTab('profile')" class="mt-5 w-full flex items-center gap-3 p-3 rounded-xl border border-borderGreen text-left">
+    <img data-me="avatar" class="avatar-img w-10 h-10 rounded-xl object-cover border border-borderGreen" alt="我的头像">
+    <span class="min-w-0"><span data-me="name" class="block text-sm font-semibold truncate"></span><span data-me="handle" class="block text-xs text-gray-400 mono truncate"></span></span>
+  </button>
+</aside>
+
+<!-- ===== Main layout ===== -->
+<div class="flex-1 max-w-7xl w-full mx-auto px-4 lg:px-8 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 pb-24 lg:pb-6">
+
+  <!-- left nav -->
+  <aside class="hidden lg:block lg:col-span-3">
+    <div class="sticky top-24 space-y-4">
+      <div class="bg-cardBlack border border-borderGreen rounded-2xl p-4">
+        <div class="text-[10px] mono text-gray-400 uppercase tracking-wider mb-3 px-3">导航 / Navigation</div>
+        <nav id="nav-desktop" class="space-y-1"></nav>
+      </div>
+      <button onclick="switchTab('profile')" class="w-full flex items-center gap-3 p-3 rounded-2xl bg-cardBlack border border-borderGreen text-left hover:border-neonGreen transition">
+        <img data-me="avatar" class="avatar-img w-10 h-10 rounded-xl object-cover border border-borderGreen" alt="我的头像">
+        <span class="min-w-0"><span data-me="name" id="sidebar-user-name" class="block text-sm font-semibold truncate"></span><span data-me="handle" id="sidebar-user-handle" class="block text-xs text-gray-400 mono truncate"></span></span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- center -->
+  <main class="lg:col-span-9 xl:col-span-6 space-y-4 min-w-0">
+
+    <div id="search-result-bar" class="hidden bg-cardBlack border border-borderGreen rounded-xl px-4 py-2 text-xs mono flex items-center justify-between">
+      <span>搜索：<span id="search-result-text" class="text-neonGreen"></span></span>
+      <button onclick="clearSearch()" class="text-gray-400 hover:text-neonGreen">清除</button>
+    </div>
+
+    <!-- FEED -->
+    <section id="tab-content-feed" class="space-y-4">
+      <div class="bg-cardBlack border border-borderGreen rounded-2xl p-4">
+        <div class="flex gap-3">
+          <img data-me="avatar" id="publisher-avatar" class="avatar-img w-10 h-10 rounded-xl object-cover border border-borderGreen flex-shrink-0" alt="我的头像">
+          <div class="flex-1 min-w-0">
+            <textarea id="new-post-content" rows="3" oninput="handlePostInput(this.value)" placeholder="发布你的 AI 研究灵感、架构图谱或代码片段…（支持 #话题）" aria-label="发布动态" class="w-full bg-techBlack border border-borderGreen rounded-xl p-3 text-sm placeholder-gray-500 focus:border-neonGreen outline-none resize-none"></textarea>
+
+            <div id="image-preview-container" class="hidden mt-3"><div id="image-preview-grid" class="grid grid-cols-2 gap-2"></div></div>
+
+            <div id="video-input-preview-box" class="hidden mt-3">
+              <div class="flex gap-2">
+                <input id="new-post-video-url" type="url" placeholder="粘贴视频链接：mp4 直链 / YouTube / B 站" aria-label="视频链接" class="flex-1 min-w-0 bg-techBlack border border-borderGreen rounded-lg px-3 py-2 text-xs outline-none focus:border-neonGreen">
+                <button type="button" onclick="confirmVideoUrl()" class="btn-primary text-xs px-3 rounded-lg">添加</button>
+                <button type="button" onclick="toggleVideoInputBox()" class="text-xs px-3 rounded-lg border border-borderGreen text-gray-400">取消</button>
+              </div>
+            </div>
+            <div id="video-chip" class="hidden mt-3">
+              <div class="inline-flex items-center gap-2 bg-techBlack border border-borderGreen rounded-lg px-3 py-1.5 text-xs mono">
+                <i class="fa-solid fa-circle-play text-neonGreen"></i><span id="video-chip-text" class="max-w-[16rem] truncate"></span>
+                <button type="button" onclick="clearVideo()" class="text-gray-400 hover:text-neonYellow" aria-label="移除视频"><i class="fa-solid fa-xmark"></i></button>
+              </div>
+            </div>
+
+            <div id="poll-creator-box" class="hidden mt-3">
+              <div class="border border-borderGreen rounded-xl p-3 space-y-2">
+                <div id="poll-options-container" class="space-y-2">
+                  <input class="poll-opt w-full bg-cardBlack border border-borderGreen rounded-lg p-2 text-xs outline-none" maxlength="40" placeholder="选项 1" aria-label="投票选项 1">
+                  <input class="poll-opt w-full bg-cardBlack border border-borderGreen rounded-lg p-2 text-xs outline-none" maxlength="40" placeholder="选项 2" aria-label="投票选项 2">
+                </div>
+                <div class="flex gap-4 text-xs mono">
+                  <button type="button" onclick="addPollOption()" class="text-neonGreen">+ 添加选项</button>
+                  <button type="button" onclick="removePoll()" class="text-gray-400 hover:text-neonYellow">移除投票</button>
+                </div>
+              </div>
+            </div>
+
+            <div id="emoji-picker-box" class="hidden mt-3"><div id="emoji-grid" class="flex flex-wrap gap-1"></div></div>
+
+            <div class="flex items-center justify-between mt-3 gap-2">
+              <div class="flex items-center gap-4 text-gray-400">
+                <label class="cursor-pointer hover:text-neonGreen" aria-label="添加图片" title="添加图片"><i class="fa-regular fa-image"></i><input type="file" id="post-image-input" accept="image/*" multiple class="hidden" onchange="handleImageUpload(event)"></label>
+                <button type="button" onclick="toggleVideoInputBox()" class="hover:text-neonGreen" aria-label="添加视频链接" title="添加视频"><i class="fa-solid fa-film"></i></button>
+                <button type="button" onclick="togglePollCreator()" class="hover:text-neonGreen" aria-label="创建投票" title="投票"><i class="fa-solid fa-square-poll-horizontal"></i></button>
+                <button type="button" onclick="toggleEmojiPicker()" class="hover:text-neonYellow" aria-label="插入表情" title="表情"><i class="fa-regular fa-face-smile"></i></button>
+              </div>
+              <div class="flex items-center gap-3">
+                <span id="char-counter" class="text-xs mono text-gray-500">0/500</span>
+                <button type="button" onclick="publishPost()" class="btn-primary text-xs px-5 py-2 rounded-xl transition">发布 <i class="fa-solid fa-paper-plane ml-1"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-cardBlack border border-borderGreen rounded-2xl flex overflow-hidden text-sm font-semibold" role="tablist">
+        <button id="feed-tab-recommend" role="tab" onclick="switchFeedTab('recommend')" class="feed-tab active flex-1 py-3 transition">推荐</button>
+        <button id="feed-tab-following" role="tab" onclick="switchFeedTab('following')" class="feed-tab flex-1 py-3 transition">关注</button>
+        <button id="feed-tab-media" role="tab" onclick="switchFeedTab('media')" class="feed-tab flex-1 py-3 transition">媒体</button>
+      </div>
+
+      <div id="posts-feed-container" class="space-y-4"></div>
+    </section>
+
+    <!-- VIDEOS -->
+    <section id="tab-content-pods" class="hidden space-y-4">
+      <div class="bg-cardBlack border border-borderGreen rounded-2xl p-4 flex items-center justify-between gap-3">
+        <h2 class="font-bold text-base"><i class="fa-solid fa-circle-play text-neonGreen mr-2"></i>视频</h2>
+        <button onclick="startVideoPost()" class="btn-primary text-xs px-4 py-2 rounded-xl">发布视频</button>
+      </div>
+      <div id="videos-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </section>
+
+    <!-- BOOKMARKS -->
+    <section id="tab-content-bookmarks" class="hidden space-y-4">
+      <div class="bg-cardBlack border border-borderGreen rounded-2xl p-4 flex items-center justify-between gap-3">
+        <h2 class="font-bold text-base"><i class="fa-solid fa-bookmark text-neonYellow mr-2"></i>书签</h2>
+        <button onclick="openCreateFolderModal()" class="text-xs border border-borderGreen text-neonGreen rounded-lg px-3 py-1.5">新建文件夹</button>
+      </div>
+      <div id="bookmark-folders-tabs" class="flex flex-wrap gap-2"></div>
+      <div id="bookmarks-container" class="space-y-4"></div>
+    </section>
+
+    <!-- NOTIFICATIONS -->
+    <section id="tab-content-notifications" class="hidden space-y-4">
+      <div class="bg-cardBlack border border-borderGreen rounded-2xl p-4 flex items-center justify-between gap-3">
+        <h2 class="font-bold text-base"><i class="fa-solid fa-bell text-neonGreen mr-2"></i>通知</h2>
+        <div class="flex gap-2 text-xs">
+          <button onclick="clearNotifications()" class="border border-borderGreen text-neonGreen rounded-lg px-3 py-1.5">全部已读</button>
+          <button onclick="deleteAllNotifications()" class="border border-borderGreen text-gray-400 rounded-lg px-3 py-1.5 hover:text-neonYellow">清空</button>
+        </div>
+      </div>
+      <div id="notifications-list-container" class="space-y-3"></div>
+    </section>
+
+    <!-- LISTS -->
+    <section id="tab-content-lists" class="hidden space-y-4">
+      <div class="bg-cardBlack border border-borderGreen rounded-2xl p-4 flex items-center justify-between gap-3">
+        <h2 class="font-bold text-base"><i class="fa-solid fa-list text-neonGreen mr-2"></i>列表</h2>
+        <button onclick="openCreateListModal()" class="text-xs border border-borderGreen text-neonGreen rounded-lg px-3 py-1.5">新建列表</button>
+      </div>
+      <div id="lists-container" class="space-y-3"></div>
+      <div id="list-timeline-container" class="hidden space-y-4">
+        <div class="bg-cardBlack border border-borderGreen rounded-2xl p-4 space-y-3">
+          <div class="flex items-center justify-between gap-3">
+            <button onclick="closeListTimeline()" class="text-xs mono text-neonGreen"><i class="fa-solid fa-arrow-left mr-1"></i>返回列表</button>
+            <button onclick="addListMember()" class="text-xs border border-borderGreen text-neonGreen rounded-lg px-3 py-1.5">添加成员</button>
+          </div>
+          <h3 id="active-list-name" class="font-bold text-neonGreen"></h3>
+          <div id="list-members-chips" class="flex flex-wrap gap-2"></div>
+        </div>
+        <div id="list-posts-container" class="space-y-4"></div>
+      </div>
+    </section>
+
+    <!-- PROFILE -->
+    <section id="tab-content-profile" class="hidden space-y-4">
+      <div class="bg-cardBlack border border-borderGreen rounded-2xl overflow-hidden">
+        <div id="profile-banner" class="h-32 sm:h-40 bg-gradient-to-r from-neonGreen/30 to-neonYellow/20 bg-cover bg-center"></div>
+        <div class="px-5 pb-5">
+          <div class="flex items-end justify-between -mt-10">
+            <img data-me="avatar" id="profile-page-avatar" class="avatar-img w-20 h-20 rounded-2xl object-cover border-4 border-cardBlack bg-techBlack" alt="我的头像">
+            <button onclick="openEditProfile()" class="text-xs border border-borderGreen text-neonGreen rounded-lg px-4 py-2">编辑资料</button>
+          </div>
+          <h2 id="profile-page-name" class="font-bold text-xl mt-3"></h2>
+          <div id="profile-page-handle" class="text-xs mono text-gray-400"></div>
+          <p id="profile-page-bio" class="text-sm mt-3 leading-6 break-words"></p>
+          <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-400 mt-3">
+            <span id="profile-location" class="hidden"></span>
+            <a id="profile-website" class="hidden text-neonGreen underline break-all" target="_blank" rel="noopener noreferrer"></a>
+          </div>
+          <div class="grid grid-cols-3 gap-3 mt-4 text-center">
+            <div class="bg-techBlack border border-borderGreen rounded-xl p-3"><div id="stat-posts" class="text-xl font-bold mono text-neonGreen">0</div><div class="text-[10px] text-gray-400">动态</div></div>
+            <div class="bg-techBlack border border-borderGreen rounded-xl p-3"><div id="stat-following" class="text-xl font-bold mono text-neonYellow">0</div><div class="text-[10px] text-gray-400">关注</div></div>
+            <div class="bg-techBlack border border-borderGreen rounded-xl p-3"><div id="stat-likes" class="text-xl font-bold mono">0</div><div class="text-[10px] text-gray-400">获赞</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="text-sm font-bold px-1">我的动态</div>
+      <div id="profile-posts-container" class="space-y-4"></div>
+    </section>
+  </main>
+
+  <!-- right column -->
+  <aside class="hidden xl:block xl:col-span-3">
+    <div class="sticky top-24 space-y-4">
+      <div class="bg-cardBlack border border-borderGreen rounded-2xl p-4">
+        <div class="text-[10px] mono text-gray-400 uppercase tracking-wider mb-3">热门话题</div>
+        <div id="trends-container" class="space-y-2 text-sm"></div>
+      </div>
+      <div class="bg-cardBlack border border-borderGreen rounded-2xl p-4">
+        <div class="text-[10px] mono text-gray-400 uppercase tracking-wider mb-3">推荐关注</div>
+        <div id="suggest-container" class="space-y-3"></div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<!-- ===== Bottom nav (mobile) ===== -->
+<nav class="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-cardBlack border-t border-borderGreen" style="padding-bottom:env(safe-area-inset-bottom)" aria-label="主导航">
+  <div id="nav-bottom" class="flex max-w-xl mx-auto"></div>
+</nav>
+
+<script>
+(() => {
+  "use strict";
+
+  const STORAGE_KEY = "shan-ji-tong-state-v1";
+  const uid = () => (crypto.randomUUID ? crypto.randomUUID() : `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`);
+  const $ = id => document.getElementById(id);
+
+  const defaultState = {
+    settings: {
+      theme: "dark",
+      accent: "green",
+      density: "default",
+      muted: false
+    },
+    profile: {
+      name: "Dr. L. Zhang",
+      handle: "@dr_zhang",
+      bio: "善鸡通AI研究院首席研究员 · 专注神经网络与去中心化极客社交。",
+      location: "中国 · 上海",
+      website: "https://example.com",
+      avatar: "https://placehold.co/200x200/121914/00FF66?text=LZ",
+      banner: ""
+    },
+    posts: [
+      {
+        id: "welcome-1",
+        author: "Dr. L. Zhang",
+        handle: "@dr_zhang",
+        avatar: "https://placehold.co/100x100/121914/00FF66?text=LZ",
+        content: "欢迎来到善鸡通 AI。这里是一个面向研究者、工程师与创造者的极客社交空间。🧠",
+        createdAt: Date.now() - 1000 * 60 * 25,
+        likes: 12,
+        comments: 3,
+        reposts: 2,
+        bookmarked: false,
+        media: [],
+        poll: null,
+        liked: false
+      },
+      {
+        id: "welcome-2",
+        author: "Neural Node",
+        handle: "@neural_node",
+        avatar: "https://placehold.co/100x100/16221A/CCFF00?text=NN",
+        content: "真正有价值的 AI 产品，不只是回答问题，而是帮助人们更好地思考问题。#AI #神经网络",
+        createdAt: Date.now() - 1000 * 60 * 90,
+        likes: 38,
+        comments: 8,
+        reposts: 5,
+        bookmarked: false,
+        media: [],
+        poll: null,
+        liked: false
+      }
+    ],
+    notifications: [
+      {
+        id: "notice-1",
+        type: "system",
+        text: "欢迎加入善鸡通 AI 社区。",
+        createdAt: Date.now() - 1000 * 60 * 20,
+        read: false
+      }
+    ],
+    bookmarks: [],
+    folders: [
+      { id: "folder-general", name: "常规书签" }
+    ],
+    lists: [
+      {
+        id: "list-ai",
+        name: "AI 研究者",
+        description: "人工智能、机器学习与神经网络相关账号",
+        members: ["@neural_node"]
+      }
+    ],
+    following: ["@neural_node"],
+    draft: ""
+  };
+
+  const TABS = ["feed", "pods", "bookmarks", "notifications", "lists", "profile"];
+  const NAV_ITEMS = [
+    ["feed", "首页", "fa-house"],
+    ["pods", "视频", "fa-circle-play"],
+    ["bookmarks", "书签", "fa-bookmark"],
+    ["notifications", "通知", "fa-bell"],
+    ["lists", "列表", "fa-list"],
+    ["profile", "个人资料", "fa-user"]
+  ];
+  const BOTTOM_NAV = ["feed", "pods", "notifications", "bookmarks", "profile"];
+  const THEMES = ["dark", "dim", "lightsout", "light"];
+  const THEME_NAMES = { dark: "Dark", dim: "Dim", lightsout: "Lights Out", light: "Light" };
+  const EMOJIS = ["😀", "😂", "🥹", "😍", "🤔", "😎", "🔥", "🧠", "⚡", "🚀", "💡", "🎉", "👍", "🙏", "❤️", "✨"];
+  const SUGGESTED = [
+    { author: "Vector Lab", handle: "@vector_lab", avatar: "https://placehold.co/100x100/16221A/00FF66?text=VL" },
+    { author: "GNN Daily", handle: "@gnn_daily", avatar: "https://placehold.co/100x100/121914/CCFF00?text=GD" },
+    { author: "Agent Smith", handle: "@agent_smith", avatar: "https://placehold.co/100x100/16221A/00FF66?text=AS" }
+  ];
+  const MAX_CHARS = 500;
+
+  let state = loadState();
+  let activeTab = "feed";
+  let activeFeedTab = "recommend";
+  let activeFolder = "all";
+  let activeList = null;
+  let currentSearch = "";
+  let uploadedImages = [];
+  let temporaryVideo = null; // { type: "video" | "embed", url, label }
+  let draftTimer = null;
+  let profileDraft = {};
+
+  /* ================= state ================= */
+  function loadState() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (!saved) return structuredClone(defaultState);
+      return normalizeState(mergeState(structuredClone(defaultState), JSON.parse(saved)));
+    } catch (error) {
+      console.warn("无法读取本地数据，将使用默认数据。", error);
+      return structuredClone(defaultState);
+    }
+  }
+
+  function mergeState(base, incoming) {
+    Object.keys(incoming || {}).forEach(key => {
+      if (
+        incoming[key] &&
+        typeof incoming[key] === "object" &&
+        !Array.isArray(incoming[key]) &&
+        typeof base[key] === "object"
+      ) {
+        base[key] = { ...base[key], ...incoming[key] };
+      } else {
+        base[key] = incoming[key];
+      }
+    });
+    return base;
+  }
+
+  function normalizeState(s) {
+    ["posts", "notifications", "bookmarks", "folders", "lists", "following"].forEach(k => {
+      if (!Array.isArray(s[k])) s[k] = structuredClone(defaultState[k]);
+    });
+    if (typeof s.draft !== "string") s.draft = "";
+    if (!THEMES.includes(s.settings.theme)) s.settings.theme = "dark";
+    if (!["green", "cyan", "purple", "pink", "orange", "blue"].includes(s.settings.accent)) s.settings.accent = "green";
+    if (!["compact", "default", "comfortable"].includes(s.settings.density)) s.settings.density = "default";
+    if (!s.folders.some(f => f.id === "folder-general")) s.folders.unshift({ id: "folder-general", name: "常规书签" });
+    s.posts = s.posts.filter(p => p && typeof p === "object" && p.id).map(p => ({
+      ...p,
+      id: String(p.id),
+      content: String(p.content || ""),
+      media: Array.isArray(p.media) ? p.media : [],
+      likes: Number(p.likes) || 0,
+      comments: Number(p.comments) || 0,
+      reposts: Number(p.reposts) || 0,
+      createdAt: Number(p.createdAt) || Date.now()
+    }));
+    s.lists.forEach(l => { if (!Array.isArray(l.members)) l.members = []; });
+    return s;
+  }
+
+  function saveState() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      return true;
+    } catch (error) {
+      console.warn("保存失败", error);
+      toast("本地存储空间已满，请删除一些带图片的动态后重试。", "error");
+      return false;
+    }
+  }
+
+  /* ================= text helpers ================= */
+  function escapeHTML(value = "") {
+    return String(value).replace(/[&<>"']/g, char => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&apos;"
+    }[char]));
+  }
+
+  function formatText(value = "") {
+    return escapeHTML(value)
+      .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-neonGreen underline break-all">$1</a>')
+      .replace(/#([\u4e00-\u9fa5\w-]+)/g, '<span class="hashtag" data-action="hashtag" data-tag="$1">#$1</span>')
+      .replace(/\n/g, "<br>");
+  }
+
+  function formatTime(timestamp) {
+    const diff = Math.max(0, Date.now() - timestamp);
+    const minute = 60 * 1000;
+    const hour = 60 * minute;
+    const day = 24 * hour;
+
+    if (diff < minute) return "刚刚";
+    if (diff < hour) return `${Math.floor(diff / minute)}分钟前`;
+    if (diff < day) return `${Math.floor(diff / hour)}小时前`;
+    return new Date(timestamp).toLocaleDateString("zh-CN");
+  }
+
+  function svgAvatar(name) {
+    const ch = (String(name || "?").trim().charAt(0) || "?").toUpperCase();
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="#121914"/><text x="50" y="62" font-size="42" font-family="sans-serif" font-weight="700" text-anchor="middle" fill="#00FF66">${ch.replace(/[<>&]/g, "")}</text></svg>`;
+    return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+  }
+
+  // 外链头像加载失败时（离线等），换成首字母头像
+  document.addEventListener("error", e => {
+    const img = e.target;
+    if (img && img.tagName === "IMG" && img.classList.contains("avatar-img") && !img.dataset.fallback) {
+      img.dataset.fallback = "1";
+      img.src = svgAvatar(img.dataset.name || img.alt);
+    }
+  }, true);
+
+  /* ================= toast / notify ================= */
+  function notify(text) {
+    state.notifications.unshift({
+      id: uid(),
+      type: "system",
+      text,
+      createdAt: Date.now(),
+      read: !!state.settings.muted
+    });
+    saveState();
+    renderNotifications();
+    updateNotificationBadge();
+  }
+
+  function toast(message, type = "success") {
+    let box = $("sjt-toast");
+    if (!box) {
+      box = document.createElement("div");
+      box.id = "sjt-toast";
+      box.setAttribute("role", "status");
+      box.setAttribute("aria-live", "polite");
+      box.className = "fixed left-1/2 -translate-x-1/2 z-[100] px-4 py-3 rounded-xl border text-xs mono shadow-lg transition-all max-w-[90vw]";
+      box.style.bottom = "calc(5.5rem + env(safe-area-inset-bottom))";
+      document.body.appendChild(box);
+    }
+
+    box.textContent = message;
+    box.style.background = type === "error" ? "#3b1111" : "var(--bg-elevated)";
+    box.style.color = type === "error" ? "#ff8b8b" : "var(--accent)";
+    box.style.borderColor = type === "error" ? "#ff5555" : "var(--accent)";
+    box.classList.remove("hidden");
+
+    clearTimeout(box._timer);
+    box._timer = setTimeout(() => box.classList.add("hidden"), 2600);
+  }
+
+  /* ================= settings / profile UI ================= */
+  function applySettings() {
+    document.documentElement.dataset.theme = state.settings.theme;
+    document.documentElement.dataset.accent = state.settings.accent;
+    document.documentElement.dataset.density = state.settings.density;
+
+    const themeIcon = $("theme-icon");
+    if (themeIcon) {
+      themeIcon.className =
+        state.settings.theme === "light"
+          ? "fa-solid fa-sun text-sm"
+          : "fa-solid fa-moon text-sm";
+    }
+
+    updateProfileUI();
+  }
+
+  function isSafeHttp(url) {
+    return /^https?:\/\//i.test(url || "");
+  }
+
+  function updateProfileUI() {
+    const p = state.profile;
+
+    document.querySelectorAll('[data-me="name"]').forEach(el => { el.textContent = p.name || ""; });
+    document.querySelectorAll('[data-me="handle"]').forEach(el => { el.textContent = p.handle || ""; });
+    document.querySelectorAll('[data-me="avatar"]').forEach(el => {
+      el.dataset.name = p.name;
+      delete el.dataset.fallback;
+      el.src = p.avatar || svgAvatar(p.name);
+    });
+
+    const set = (id, text) => { const el = $(id); if (el) el.textContent = text || ""; };
+    set("profile-page-name", p.name);
+    set("profile-page-handle", p.handle);
+    set("profile-page-bio", p.bio);
+
+    const loc = $("profile-location");
+    if (loc) {
+      loc.classList.toggle("hidden", !p.location);
+      loc.innerHTML = `<i class="fa-solid fa-location-dot mr-1"></i>${escapeHTML(p.location || "")}`;
+    }
+
+    const web = $("profile-website");
+    if (web) {
+      const ok = isSafeHttp(p.website);
+      web.classList.toggle("hidden", !ok);
+      if (ok) {
+        web.href = p.website;
+        web.innerHTML = `<i class="fa-solid fa-link mr-1"></i>${escapeHTML(p.website.replace(/^https?:\/\//i, ""))}`;
+      }
+    }
+
+    const banner = $("profile-banner");
+    if (banner) banner.style.backgroundImage = p.banner ? `url("${p.banner}")` : "";
+
+    const mine = state.posts.filter(post => post.handle === p.handle);
+    set("stat-posts", String(mine.length));
+    set("stat-following", String(state.following.length));
+    set("stat-likes", String(mine.reduce((sum, post) => sum + (post.likes || 0), 0)));
+  }
+
+  /* ================= navigation ================= */
+  function navHTML() {
+    return NAV_ITEMS.map(([tab, label, icon]) => `
+      <button data-nav="${tab}" onclick="switchTab('${tab}')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-300 hover:text-neonGreen hover:bg-darkGreenCard transition">
+        <i class="fa-solid ${icon} w-5 text-center"></i><span>${label}</span>
+        ${tab === "notifications" ? '<span class="notif-badge hidden ml-auto w-2 h-2 rounded-full bg-neonYellow"></span>' : ""}
+      </button>`).join("");
+  }
+
+  function bottomNavHTML() {
+    return BOTTOM_NAV.map(tab => {
+      const item = NAV_ITEMS.find(n => n[0] === tab);
+      return `
+        <button data-nav="${tab}" onclick="switchTab('${tab}')" class="bnav-item relative flex-1 py-2.5 flex flex-col items-center gap-0.5 text-gray-400 text-[10px]" aria-label="${item[1]}">
+          <i class="fa-solid ${item[2]} text-base"></i><span>${item[1]}</span>
+          ${tab === "notifications" ? '<span class="notif-badge hidden absolute top-1.5 left-1/2 ml-2 w-2 h-2 rounded-full bg-neonYellow"></span>' : ""}
+        </button>`;
+    }).join("");
+  }
+
+  window.switchTab = function (tab) {
+    if (!TABS.includes(tab)) tab = "feed";
+    activeTab = tab;
+
+    document.querySelectorAll('[id^="tab-content-"]').forEach(section => {
+      section.classList.add("hidden");
+    });
+    $(`tab-content-${tab}`)?.classList.remove("hidden");
+
+    document.querySelectorAll("[data-nav]").forEach(button => {
+      button.classList.toggle("active", button.dataset.nav === tab);
+    });
+
+    renderActiveTab();
+
+    if (tab === "notifications") {
+      // 先渲染（保留未读高亮），再标记为已读
+      state.notifications.forEach(item => { item.read = true; });
+      saveState();
+      updateNotificationBadge();
+    }
+
+    closeMobileDrawer();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  function renderActiveTab() {
+    if (activeTab === "feed") renderPosts();
+    if (activeTab === "pods") renderVideos();
+    if (activeTab === "bookmarks") renderBookmarks();
+    if (activeTab === "notifications") renderNotifications();
+    if (activeTab === "lists") renderLists();
+    if (activeTab === "profile") { updateProfileUI(); renderProfilePosts(); }
+  }
+
+  function refresh() {
+    renderPosts();
+    renderActiveTab();
+    renderRightColumn();
+    updateProfileUI();
+  }
+
+  window.switchFeedTab = function (tab) {
+    activeFeedTab = tab;
+
+    ["recommend", "following", "media"].forEach(name => {
+      const button = $(`feed-tab-${name}`);
+      if (!button) return;
+      const active = name === tab;
+      button.classList.toggle("active", active);
+      button.setAttribute("aria-selected", String(active));
+    });
+
+    renderPosts();
+  };
+
+  /* ================= posts ================= */
+  function matchesSearch(post) {
+    if (!currentSearch.trim()) return true;
+    const query = currentSearch.toLowerCase();
+    return `${post.content} ${post.author} ${post.handle}`.toLowerCase().includes(query);
+  }
+
+  function getVisiblePosts() {
+    let posts = [...state.posts];
+
+    if (activeFeedTab === "following") {
+      posts = posts.filter(post =>
+        state.following.includes(post.handle) || post.handle === state.profile.handle
+      );
+    }
+
+    if (activeFeedTab === "media") {
+      posts = posts.filter(post => post.media && post.media.length);
+    }
+
+    return posts.filter(matchesSearch).sort((a, b) => b.createdAt - a.createdAt);
+  }
+
+  function renderPosts(containerId = "posts-feed-container", posts = null, emptyText = "暂时没有匹配的动态") {
+    const container = $(containerId);
+    if (!container) return;
+
+    const list = posts || getVisiblePosts();
+
+    if (!list.length) {
+      container.innerHTML = `
+        <div class="bg-cardBlack border border-borderGreen rounded-2xl p-8 text-center text-gray-400 text-sm">
+          <i class="fa-solid fa-inbox text-2xl mb-3 text-neonGreen"></i>
+          <p>${escapeHTML(emptyText)}</p>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = list.map(renderPost).join("");
+  }
+
+  const SAFE_EMBED = /^https:\/\/(www\.youtube\.com\/embed\/[\w-]{11}|player\.bilibili\.com\/player\.html\?bvid=BV\w+)/;
+
+  function renderMedia(post) {
+    const media = (post.media || []).filter(item => item && item.url);
+    const images = media.filter(item => item.type !== "video" && item.type !== "embed");
+    const others = media.filter(item => item.type === "video" || item.type === "embed");
+    let html = "";
+
+    if (images.length) {
+      const multi = images.length > 1;
+      html += `<div class="grid ${multi ? "grid-cols-2" : "grid-cols-1"} gap-2 mt-3">${images.map(item =>
+        `<img src="${escapeHTML(item.url)}" loading="lazy" alt="动态图片" class="rounded-xl border border-borderGreen w-full object-cover ${multi ? "h-44" : "max-h-96"}">`
+      ).join("")}</div>`;
+    }
+
+    others.forEach(item => {
+      if (item.type === "video") {
+        html += `<video controls preload="metadata" playsinline class="w-full rounded-xl border border-borderGreen mt-3 max-h-96 bg-black" src="${escapeHTML(item.url)}"></video>`;
+      } else if (SAFE_EMBED.test(item.url)) {
+        html += `<div class="mt-3 aspect-video"><iframe src="${escapeHTML(item.url)}" title="视频" loading="lazy" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" class="w-full h-full rounded-xl border border-borderGreen"></iframe></div>`;
+      }
+    });
+
+    return html;
+  }
+
+  function renderPoll(post) {
+    if (!post.poll || !Array.isArray(post.poll.options)) return "";
+    const total = post.poll.options.reduce((sum, option) => sum + (option.votes || 0), 0);
+    const voted = Number.isInteger(post.poll.voted) ? post.poll.voted : null;
+
+    return `<div class="mt-3 space-y-2">${post.poll.options.map((option, index) => {
+      if (voted === null) {
+        return `<button data-action="vote" data-id="${escapeHTML(post.id)}" data-index="${index}" class="w-full text-left text-xs border border-borderGreen rounded-lg px-3 py-2 hover:border-neonGreen transition">${escapeHTML(option.text)}</button>`;
+      }
+      const pct = total ? Math.round((option.votes || 0) / total * 100) : 0;
+      return `<div class="relative overflow-hidden border ${index === voted ? "border-neonGreen" : "border-borderGreen"} rounded-lg px-3 py-2 text-xs">
+        <div class="absolute inset-y-0 left-0 bg-neonGreen/15" style="width:${pct}%"></div>
+        <span class="relative">${escapeHTML(option.text)}</span><span class="relative float-right text-neonGreen mono">${pct}% · ${option.votes || 0} 票</span>
+      </div>`;
+    }).join("")}<div class="text-[10px] text-gray-500 mono">${total} 票</div></div>`;
+  }
+
+  function renderPost(post) {
+    const id = escapeHTML(post.id);
+    const bookmarked = state.bookmarks.some(item => item.postId === post.id);
+    const mine = post.handle === state.profile.handle;
+    const following = state.following.includes(post.handle);
+
+    return `
+      <article class="post-card bg-cardBlack border border-borderGreen rounded-2xl" data-post-id="${id}">
+        <div class="flex gap-3">
+          <img src="${escapeHTML(post.avatar || svgAvatar(post.author))}" data-name="${escapeHTML(post.author)}" class="avatar-img w-10 h-10 rounded-xl object-cover border border-borderGreen flex-shrink-0" alt="${escapeHTML(post.author)}">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 text-sm flex-wrap">
+              <span class="font-bold">${escapeHTML(post.author)}</span>
+              <span class="text-xs text-gray-500 mono">${escapeHTML(post.handle)}</span>
+              <span class="text-xs text-gray-500">· ${formatTime(post.createdAt)}</span>
+              ${mine
+                ? `<button data-action="delete-post" data-id="${id}" class="ml-auto text-gray-500 hover:text-red-400" title="删除" aria-label="删除动态"><i class="fa-solid fa-trash-can"></i></button>`
+                : `<button data-action="follow" data-handle="${escapeHTML(post.handle)}" class="ml-auto text-[11px] mono px-2.5 py-0.5 rounded-full border ${following ? "border-borderGreen text-gray-400" : "border-neonGreen text-neonGreen"}">${following ? "已关注" : "关注"}</button>`}
+            </div>
+            <div class="mt-2 text-sm leading-6 break-words">${formatText(post.content)}</div>
+            ${renderMedia(post)}
+            ${renderPoll(post)}
+            <div class="flex items-center justify-between mt-4 max-w-md text-xs text-gray-500">
+              <button data-action="comment" data-id="${id}" class="hover:text-neonGreen transition" aria-label="评论"><i class="fa-regular fa-comment mr-1"></i>${post.comments || 0}</button>
+              <button data-action="repost" data-id="${id}" class="hover:text-neonGreen transition" aria-label="转发"><i class="fa-solid fa-retweet mr-1"></i>${post.reposts || 0}</button>
+              <button data-action="like" data-id="${id}" aria-pressed="${!!post.liked}" class="${post.liked ? "text-pink-400" : ""} hover:text-pink-400 transition" aria-label="点赞"><i class="${post.liked ? "fa-solid" : "fa-regular"} fa-heart mr-1"></i>${post.likes || 0}</button>
+              <button data-action="bookmark" data-id="${id}" aria-pressed="${bookmarked}" class="${bookmarked ? "text-neonYellow" : ""} hover:text-neonYellow transition" aria-label="书签"><i class="${bookmarked ? "fa-solid" : "fa-regular"} fa-bookmark"></i></button>
+              <button data-action="share" data-id="${id}" class="hover:text-neonGreen transition" aria-label="分享"><i class="fa-solid fa-share-nodes"></i></button>
+            </div>
+          </div>
+        </div>
+      </article>`;
+  }
+
+  /* ================= composer ================= */
+  window.handlePostInput = function (value) {
+    updateCounter();
+    state.draft = value;
+    clearTimeout(draftTimer);
+    draftTimer = setTimeout(saveState, 500);
+  };
+
+  function updateCounter() {
+    const input = $("new-post-content");
+    const counter = $("char-counter");
+    if (!input || !counter) return;
+    counter.textContent = `${input.value.length}/${MAX_CHARS}`;
+    counter.classList.toggle("text-red-400", input.value.length > MAX_CHARS);
+    counter.classList.toggle("text-gray-500", input.value.length <= MAX_CHARS);
+  }
+
+  function getPollOptions() {
+    const box = $("poll-creator-box");
+    if (!box || box.classList.contains("hidden")) return null;
+    return [...document.querySelectorAll(".poll-opt")].map(i => i.value.trim()).filter(Boolean);
+  }
+
+  window.publishPost = function () {
+    const input = $("new-post-content");
+    const content = (input?.value || "").trim();
+    const pollOptions = getPollOptions();
+
+    if (!content && !uploadedImages.length && !temporaryVideo) {
+      toast("请输入内容或添加媒体。", "error");
+      return;
+    }
+
+    if (content.length > MAX_CHARS) {
+      toast(`动态不能超过 ${MAX_CHARS} 字。`, "error");
+      return;
+    }
+
+    if (pollOptions && pollOptions.length === 1) {
+      toast("投票至少需要 2 个选项。", "error");
+      return;
+    }
+
+    const post = {
+      id: uid(),
+      author: state.profile.name,
+      handle: state.profile.handle,
+      avatar: state.profile.avatar,
+      content,
+      createdAt: Date.now(),
+      likes: 0,
+      comments: 0,
+      reposts: 0,
+      bookmarked: false,
+      liked: false,
+      media: [
+        ...uploadedImages.map(url => ({ type: "image", url })),
+        ...(temporaryVideo ? [{ type: temporaryVideo.type, url: temporaryVideo.url }] : [])
+      ],
+      poll: pollOptions && pollOptions.length >= 2
+        ? { options: pollOptions.slice(0, 4).map(text => ({ text, votes: 0 })), voted: null }
+        : null
+    };
+
+    state.posts.unshift(post);
+    const prevDraft = state.draft;
+    state.draft = "";
+    if (!saveState()) {
+      state.posts.shift();
+      state.draft = prevDraft;
+      return;
+    }
+
+    input.value = "";
+    uploadedImages = [];
+    temporaryVideo = null;
+    renderImagePreview();
+    renderVideoChip();
+    $("video-input-preview-box")?.classList.add("hidden");
+    removePoll();
+    $("emoji-picker-box")?.classList.add("hidden");
+    updateCounter();
+    refresh();
+    notify("你的动态已发布。");
+    toast("发布成功");
+  };
+
+  /* ---- images ---- */
+  function readImage(file, { maxW = 1280, maxH = 1280, cover = false, quality = 0.82 } = {}) {
+    return new Promise((resolve, reject) => {
+      if (!file || !file.type.startsWith("image/")) return reject(new Error("请选择图片文件"));
+      if (file.size > 15 * 1024 * 1024) return reject(new Error("图片太大（上限 15MB）"));
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        const w = img.naturalWidth, h = img.naturalHeight;
+        let sx = 0, sy = 0, sw = w, sh = h, dw, dh;
+        if (cover) {
+          dw = maxW; dh = maxH;
+          const r = Math.max(dw / w, dh / h);
+          sw = dw / r; sh = dh / r; sx = (w - sw) / 2; sy = (h - sh) / 2;
+        } else {
+          const r = Math.min(1, maxW / w, maxH / h);
+          dw = Math.round(w * r); dh = Math.round(h * r);
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = dw; canvas.height = dh;
+        const ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, dw, dh);
+        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, dw, dh);
+        resolve(canvas.toDataURL("image/jpeg", quality));
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("无法读取这张图片")); };
+      img.src = url;
+    });
+  }
+
+  window.handleImageUpload = async function (event) {
+    const slots = 4 - uploadedImages.length;
+    const files = [...(event.target.files || [])].filter(f => f.type.startsWith("image/")).slice(0, Math.max(0, slots));
+    event.target.value = "";
+
+    if (slots <= 0) return toast("最多添加 4 张图片。", "error");
+
+    for (const file of files) {
+      try {
+        uploadedImages.push(await readImage(file));
+      } catch (error) {
+        toast(error.message, "error");
+      }
+    }
+    renderImagePreview();
+  };
+
+  function renderImagePreview() {
+    const container = $("image-preview-container");
+    const grid = $("image-preview-grid");
+    if (!container || !grid) return;
+
+    container.classList.toggle("hidden", !uploadedImages.length);
+    grid.innerHTML = uploadedImages.map((src, index) => `
+      <div class="relative">
+        <img src="${src}" alt="待发布图片 ${index + 1}" class="h-28 w-full object-cover rounded-lg border border-borderGreen">
+        <button type="button" data-action="remove-image" data-index="${index}" aria-label="移除图片"
+          class="absolute top-1 right-1 bg-black/70 rounded-full w-6 h-6 text-xs text-white">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    `).join("");
+  }
+
+  window.removeUploadedImage = function (index) {
+    uploadedImages.splice(index, 1);
+    renderImagePreview();
+  };
+
+  /* ---- video ---- */
+  function parseVideoUrl(raw) {
+    let u;
+    try { u = new URL(String(raw).trim()); } catch { return null; }
+    if (!/^https?:$/.test(u.protocol)) return null;
+
+    const host = u.hostname.replace(/^www\./, "");
+    const yt = id => (/^[\w-]{11}$/.test(id || "") ? { type: "embed", url: `https://www.youtube.com/embed/${id}`, label: "YouTube 视频" } : null);
+
+    if (host === "youtu.be") return yt(u.pathname.slice(1)) || null;
+    if (host === "youtube.com" || host === "m.youtube.com") {
+      const m = u.pathname.match(/^\/(?:shorts|embed)\/([\w-]{11})/);
+      return yt(u.searchParams.get("v") || (m && m[1]));
+    }
+    if (host === "bilibili.com" || host === "m.bilibili.com") {
+      const m = u.pathname.match(/\/video\/(BV\w+)/);
+      return m ? { type: "embed", url: `https://player.bilibili.com/player.html?bvid=${m[1]}&autoplay=0`, label: "B 站视频" } : null;
+    }
+    return { type: "video", url: u.href, label: u.hostname + u.pathname };
+  }
+
+  window.toggleVideoInputBox = function () {
+    const box = $("video-input-preview-box");
+    if (!box) return;
+    box.classList.toggle("hidden");
+    if (!box.classList.contains("hidden")) $("new-post-video-url")?.focus();
+  };
+
+  window.confirmVideoUrl = function () {
+    const input = $("new-post-video-url");
+    const raw = (input?.value || "").trim();
+    if (!raw) return toast("请粘贴视频链接。", "error");
+
+    const parsed = parseVideoUrl(raw);
+    if (!parsed) return toast("链接无法识别，请使用 mp4 直链、YouTube 或 B 站视频链接。", "error");
+
+    temporaryVideo = parsed;
+    input.value = "";
+    $("video-input-preview-box")?.classList.add("hidden");
+    renderVideoChip();
+  };
+
+  window.clearVideo = function () {
+    temporaryVideo = null;
+    renderVideoChip();
+  };
+
+  function renderVideoChip() {
+    const chip = $("video-chip");
+    if (!chip) return;
+    chip.classList.toggle("hidden", !temporaryVideo);
+    const text = $("video-chip-text");
+    if (text) text.textContent = temporaryVideo ? temporaryVideo.label : "";
+  }
+
+  window.startVideoPost = function () {
+    switchTab("feed");
+    const box = $("video-input-preview-box");
+    if (box) box.classList.remove("hidden");
+    setTimeout(() => $("new-post-video-url")?.focus(), 150);
+  };
+
+  /* ---- poll / emoji ---- */
+  window.togglePollCreator = function (force) {
+    const box = $("poll-creator-box");
+    if (!box) return;
+
+    if (typeof force === "boolean") box.classList.toggle("hidden", !force);
+    else box.classList.toggle("hidden");
+  };
+
+  window.removePoll = function () {
+    const container = $("poll-options-container");
+    $("poll-creator-box")?.classList.add("hidden");
+    if (!container) return;
+    container.innerHTML = [1, 2].map(n =>
+      `<input class="poll-opt w-full bg-cardBlack border border-borderGreen rounded-lg p-2 text-xs outline-none" maxlength="40" placeholder="选项 ${n}" aria-label="投票选项 ${n}">`
+    ).join("");
+  };
+
+  window.addPollOption = function () {
+    const container = $("poll-options-container");
+    if (!container) return;
+
+    const count = container.querySelectorAll(".poll-opt").length;
+    if (count >= 4) {
+      toast("最多添加 4 个选项。", "error");
+      return;
+    }
+
+    const input = document.createElement("input");
+    input.className = "poll-opt w-full bg-cardBlack border border-borderGreen rounded-lg p-2 text-xs outline-none";
+    input.maxLength = 40;
+    input.placeholder = `选项 ${count + 1}`;
+    input.setAttribute("aria-label", `投票选项 ${count + 1}`);
+    container.appendChild(input);
+    input.focus();
+  };
+
+  window.toggleEmojiPicker = function () {
+    $("emoji-picker-box")?.classList.toggle("hidden");
+  };
+
+  window.insertEmoji = function (emoji) {
+    const input = $("new-post-content");
+    if (!input) return;
+
+    const start = input.selectionStart;
+    const end = input.selectionEnd;
+    input.value = input.value.slice(0, start) + emoji + input.value.slice(end);
+    input.focus();
+    input.selectionStart = input.selectionEnd = start + emoji.length;
+    handlePostInput(input.value);
+  };
+
+  /* ================= post actions ================= */
+  const findPost = id => state.posts.find(item => item.id === id);
+
+  function likePost(id) {
+    const post = findPost(id);
+    if (!post) return;
+
+    post.liked = !post.liked;
+    post.likes = Math.max(0, (post.likes || 0) + (post.liked ? 1 : -1));
+    saveState();
+    refresh();
+  }
+
+  function addBookmark(postId, folderId) {
+    state.bookmarks.push({ id: uid(), postId, folderId, createdAt: Date.now() });
+    saveState();
+    refresh();
+    toast("已加入书签");
+  }
+
+  function bookmarkPost(id) {
+    const index = state.bookmarks.findIndex(item => item.postId === id);
+
+    if (index >= 0) {
+      state.bookmarks.splice(index, 1);
+      saveState();
+      refresh();
+      toast("已取消收藏");
+      return;
+    }
+
+    if (state.folders.length <= 1) return addBookmark(id, "folder-general");
+
+    const body = `<p class="text-xs text-gray-400 mb-3">选择要保存到的文件夹</p><div class="space-y-2">${state.folders.map(f =>
+      `<button data-action="pick-folder" data-id="${escapeHTML(id)}" data-folder="${escapeHTML(f.id)}" class="w-full text-left border border-borderGreen rounded-lg px-3 py-2 text-sm hover:border-neonGreen"><i class="fa-regular fa-folder mr-2 text-neonGreen"></i>${escapeHTML(f.name)}</button>`
+    ).join("")}</div>`;
+    showModal("folder-pick-modal", "收藏到…", body);
+  }
+
+  function repostPost(id) {
+    const original = findPost(id);
+    if (!original) return;
+
+    original.reposts = (original.reposts || 0) + 1;
+
+    state.posts.unshift({
+      ...original,
+      id: uid(),
+      author: state.profile.name,
+      handle: state.profile.handle,
+      avatar: state.profile.avatar,
+      content: `转发 @${original.handle.replace("@", "")}：${original.content}`,
+      createdAt: Date.now(),
+      likes: 0,
+      comments: 0,
+      commentList: [],
+      reposts: 0,
+      liked: false,
+      bookmarked: false,
+      poll: null
+    });
+
+    saveState();
+    refresh();
+    notify("你转发了一条动态。");
+  }
+
+  function openComments(id) {
+    const post = findPost(id);
+    if (!post) return;
+
+    showModal("comments-modal", "评论", `
+      <div class="text-xs text-gray-400 mb-3 break-words">${escapeHTML(post.author)}：${escapeHTML(post.content.slice(0, 80))}${post.content.length > 80 ? "…" : ""}</div>
+      <div id="comment-list" class="space-y-3 max-h-64 overflow-y-auto mb-4"></div>
+      <div class="flex gap-2">
+        <input id="comment-input" maxlength="200" placeholder="写下你的评论…" aria-label="评论内容" class="flex-1 min-w-0 bg-techBlack border border-borderGreen rounded-lg px-3 py-2 text-sm outline-none focus:border-neonGreen">
+        <button data-action="submit-comment" data-id="${escapeHTML(id)}" class="btn-primary text-xs px-4 rounded-lg">发送</button>
+      </div>`);
+    renderCommentList(id);
+    $("comment-input")?.focus();
+  }
+
+  function renderCommentList(id) {
+    const post = findPost(id);
+    const box = $("comment-list");
+    if (!post || !box) return;
+
+    const list = post.commentList || [];
+    const hidden = Math.max(0, (post.comments || 0) - list.length);
+    box.innerHTML = (list.length
+      ? list.map(c => `
+        <div class="flex gap-2">
+          <img src="${escapeHTML(c.avatar || svgAvatar(c.author))}" data-name="${escapeHTML(c.author)}" class="avatar-img w-8 h-8 rounded-lg object-cover border border-borderGreen" alt="">
+          <div class="min-w-0"><div class="text-xs"><span class="font-semibold">${escapeHTML(c.author)}</span> <span class="text-gray-500 mono">${escapeHTML(c.handle)} · ${formatTime(c.createdAt)}</span></div><p class="text-sm break-words">${escapeHTML(c.text)}</p></div>
+        </div>`).join("")
+      : '<div class="text-xs text-gray-500 mono">还没有评论内容，来说第一句吧</div>')
+      + (hidden ? `<div class="text-[11px] text-gray-500 mono">另有 ${hidden} 条历史评论未保存详细内容</div>` : "");
+  }
+
+  function submitComment(id) {
+    const input = $("comment-input");
+    const text = (input?.value || "").trim();
+    const post = findPost(id);
+    if (!text || !post) return;
+
+    post.commentList = post.commentList || [];
+    post.commentList.push({
+      id: uid(),
+      author: state.profile.name,
+      handle: state.profile.handle,
+      avatar: state.profile.avatar,
+      text,
+      createdAt: Date.now()
+    });
+    post.comments = (post.comments || 0) + 1;
+    saveState();
+    input.value = "";
+    renderCommentList(id);
+    refresh();
+    notify("评论已添加。");
+  }
+
+  async function sharePost(id) {
+    const url = `${location.href.split("#")[0]}#post-${id}`;
+
+    try {
+      await navigator.clipboard.writeText(url);
+      toast("动态链接已复制");
+    } catch {
+      prompt("复制下面的链接：", url);
+    }
+  }
+
+  function deletePost(id) {
+    if (!confirm("确定删除这条动态吗？")) return;
+
+    state.posts = state.posts.filter(post => post.id !== id);
+    state.bookmarks = state.bookmarks.filter(item => item.postId !== id);
+    saveState();
+    refresh();
+    toast("动态已删除");
+  }
+
+  function votePoll(postId, optionIndex) {
+    const post = findPost(postId);
+    if (!post?.poll || !post.poll.options[optionIndex]) return;
+    if (Number.isInteger(post.poll.voted)) return toast("你已经投过票了。", "error");
+
+    post.poll.options[optionIndex].votes = (post.poll.options[optionIndex].votes || 0) + 1;
+    post.poll.voted = optionIndex;
+    saveState();
+    refresh();
+    toast("投票成功");
+  }
+
+  function toggleFollow(handle) {
+    if (!handle || handle === state.profile.handle) return;
+    const index = state.following.indexOf(handle);
+    if (index >= 0) {
+      state.following.splice(index, 1);
+      toast(`已取消关注 ${handle}`);
+    } else {
+      state.following.push(handle);
+      toast(`已关注 ${handle}`);
+    }
+    saveState();
+    refresh();
+  }
+
+  /* ================= search / theme / drawer ================= */
+  window.handleGlobalSearch = function (value) {
+    currentSearch = value.trim();
+
+    $("search-result-bar")?.classList.toggle("hidden", !currentSearch);
+    const text = $("search-result-text");
+    if (text) text.textContent = currentSearch;
+
+    if (activeTab !== "feed") switchTab("feed");
+    renderPosts();
+  };
+
+  window.clearSearch = function () {
+    const input = $("global-search-input");
+    if (input) input.value = "";
+
+    currentSearch = "";
+    $("search-result-bar")?.classList.add("hidden");
+    renderPosts();
+  };
+
+  window.toggleThemeQuick = function () {
+    const currentIndex = THEMES.indexOf(state.settings.theme);
+    state.settings.theme = THEMES[(currentIndex + 1) % THEMES.length];
+    saveState();
+    applySettings();
+    toast(`主题已切换为：${THEME_NAMES[state.settings.theme]}`);
+  };
+
+  function closeMobileDrawer() {
+    $("mobile-drawer")?.classList.add("-translate-x-full");
+    $("mobile-drawer-overlay")?.classList.add("hidden");
+  }
+
+  window.toggleMobileDrawer = function () {
+    const drawer = $("mobile-drawer");
+    const overlay = $("mobile-drawer-overlay");
+    if (!drawer || !overlay) return;
+
+    const closed = drawer.classList.contains("-translate-x-full");
+    drawer.classList.toggle("-translate-x-full", !closed);
+    overlay.classList.toggle("hidden", !closed);
+  };
+
+  /* ================= modals ================= */
+  function showModal(id, title, bodyHTML, { wide = false } = {}) {
+    closeModal(id);
+    const modal = document.createElement("div");
+    modal.id = id;
+    modal.dataset.modal = "1";
+    modal.className = "fixed inset-0 z-[90] bg-black/70 backdrop-blur-sm flex items-end sm:items-center justify-center sm:p-4";
+    modal.innerHTML = `
+      <div role="dialog" aria-modal="true" aria-label="${escapeHTML(title)}" class="bg-cardBlack border border-borderGreen rounded-t-2xl sm:rounded-2xl w-full ${wide ? "max-w-2xl" : "max-w-lg"} max-h-[92vh] overflow-y-auto p-5" style="padding-bottom:calc(1.25rem + env(safe-area-inset-bottom))">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="font-bold text-lg text-neonGreen">${escapeHTML(title)}</h2>
+          <button type="button" onclick="closeModal('${id}')" class="text-gray-400 hover:text-neonGreen" aria-label="关闭"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+        ${bodyHTML}
+      </div>`;
+    modal.addEventListener("mousedown", e => { if (e.target === modal) closeModal(id); });
+    document.body.appendChild(modal);
+    return modal;
+  }
+
+  window.closeModal = function (id) {
+    $(id)?.remove();
+  };
+
+  window.openSettings = function () {
+    const swatches = [
+      ["green", "#00FF66"], ["cyan", "#00E5FF"], ["purple", "#A855F7"],
+      ["pink", "#EC4899"], ["orange", "#F97316"], ["blue", "#3B82F6"]
+    ].map(([name, color]) =>
+      `<button type="button" title="${name}" aria-label="强调色 ${name}" data-action="set-accent" data-accent="${name}" style="background:${color}" class="accent-swatch"></button>`
+    ).join("");
+
+    showModal("settings-modal", "设置与个性化", `
+      <div class="space-y-5">
+        <label class="block">
+          <span class="text-xs text-gray-400 mono">主题模式</span>
+          <select id="setting-theme" class="mt-2 w-full bg-techBlack border border-borderGreen rounded-lg p-2 text-sm">
+            ${THEMES.map(t => `<option value="${t}">${THEME_NAMES[t]}</option>`).join("")}
+          </select>
+        </label>
+        <div>
+          <span class="text-xs text-gray-400 mono">强调色</span>
+          <div class="flex gap-3 mt-3 flex-wrap">${swatches}</div>
+        </div>
+        <label class="block">
+          <span class="text-xs text-gray-400 mono">显示密度</span>
+          <select id="setting-density" class="mt-2 w-full bg-techBlack border border-borderGreen rounded-lg p-2 text-sm">
+            <option value="compact">紧凑</option>
+            <option value="default">默认</option>
+            <option value="comfortable">舒适</option>
+          </select>
+        </label>
+        <label class="flex items-center justify-between border-t border-borderGreen pt-4">
+          <span class="text-sm">静音通知（新通知不显示红点）</span>
+          <input id="setting-muted" type="checkbox" class="accent-neonGreen w-4 h-4">
+        </label>
+        <div class="border-t border-borderGreen pt-4 flex gap-2">
+          <button type="button" onclick="exportData()" class="flex-1 border border-borderGreen text-neonGreen rounded-lg py-2 text-xs">导出数据</button>
+          <button type="button" onclick="document.getElementById('import-data-input').click()" class="flex-1 border border-borderGreen text-neonYellow rounded-lg py-2 text-xs">导入数据</button>
+          <input id="import-data-input" type="file" accept="application/json,.json" class="hidden" onchange="importData(event)">
+        </div>
+        <button type="button" onclick="resetAppData()" class="w-full border border-red-500/40 text-red-400 rounded-lg py-2 text-xs">恢复默认数据</button>
+        <p class="text-[11px] text-gray-500 mono">所有数据只保存在这台设备的浏览器里，换设备或清除浏览器数据前请先导出备份。</p>
+      </div>`);
+
+    syncSettingsForm();
+  };
+
+  function syncSettingsForm() {
+    const theme = $("setting-theme");
+    const density = $("setting-density");
+    const muted = $("setting-muted");
+
+    if (theme) theme.value = state.settings.theme;
+    if (density) density.value = state.settings.density;
+    if (muted) muted.checked = state.settings.muted;
+
+    document.querySelectorAll("[data-accent]").forEach(button => {
+      button.classList.toggle("active", button.dataset.accent === state.settings.accent);
+    });
+  }
+
+  window.exportData = function () {
+    const blob = new Blob(
+      [JSON.stringify(state, null, 2)],
+      { type: "application/json;charset=utf-8" }
+    );
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `shan-ji-tong-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+    toast("数据导出成功");
+  };
+
+  window.importData = function (event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      try {
+        const imported = JSON.parse(reader.result);
+        if (!imported || typeof imported !== "object" || !Array.isArray(imported.posts)) throw new Error("bad");
+        const next = normalizeState(mergeState(structuredClone(defaultState), imported));
+        const previous = state;
+        state = next;
+        if (!saveState()) { state = previous; return; }
+        applySettings();
+        renderAll();
+        toast("数据导入成功");
+        closeModal("settings-modal");
+      } catch {
+        toast("导入失败：JSON 文件格式不正确。", "error");
+      }
+    };
+
+    reader.readAsText(file);
+    event.target.value = "";
+  };
+
+  window.resetAppData = function () {
+    if (!confirm("确定清空本地数据并恢复默认状态吗？")) return;
+
+    state = structuredClone(defaultState);
+    saveState();
+    applySettings();
+    activeFolder = "all";
+    activeList = null;
+    renderAll();
+    toast("已恢复默认数据");
+    closeModal("settings-modal");
+  };
+
+  /* ================= notifications ================= */
+  window.clearNotifications = function () {
+    state.notifications.forEach(item => { item.read = true; });
+    saveState();
+    renderNotifications();
+    updateNotificationBadge();
+  };
+
+  window.deleteAllNotifications = function () {
+    if (!state.notifications.length) return;
+    if (!confirm("清空所有通知？")) return;
+    state.notifications = [];
+    saveState();
+    renderNotifications();
+    updateNotificationBadge();
+  };
+
+  function updateNotificationBadge() {
+    const unread = state.notifications.some(item => !item.read);
+    document.querySelectorAll(".notif-badge").forEach(el => el.classList.toggle("hidden", !unread));
+  }
+
+  function renderNotifications() {
+    const container = $("notifications-list-container");
+    if (!container) return;
+
+    if (!state.notifications.length) {
+      container.innerHTML = `
+        <div class="bg-cardBlack border border-borderGreen rounded-2xl p-8 text-center text-gray-400 text-sm">
+          暂无通知
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = state.notifications.map(item => `
+      <div class="bg-cardBlack border ${item.read ? "border-borderGreen" : "border-neonGreen"} rounded-2xl p-4 flex gap-3">
+        <div class="w-8 h-8 rounded-lg bg-neonGreen/10 text-neonGreen flex items-center justify-center flex-shrink-0">
+          <i class="fa-solid fa-bell"></i>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm break-words">${escapeHTML(item.text)}</p>
+          <span class="text-xs text-gray-500 mono">${formatTime(item.createdAt)}</span>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  /* ================= bookmarks ================= */
+  function renderBookmarks() {
+    const tabs = $("bookmark-folders-tabs");
+    const container = $("bookmarks-container");
+    if (!tabs || !container) return;
+
+    if (activeFolder !== "all" && !state.folders.some(f => f.id === activeFolder)) activeFolder = "all";
+
+    const tabClass = on => `px-3 py-1.5 rounded-lg text-xs border ${on ? "border-neonGreen text-neonGreen" : "border-borderGreen text-gray-400"}`;
+    tabs.innerHTML = `
+      <button data-action="select-folder" data-folder="all" class="${tabClass(activeFolder === "all")}">全部</button>
+      ${state.folders.map(folder => `
+        <button data-action="select-folder" data-folder="${escapeHTML(folder.id)}" class="${tabClass(activeFolder === folder.id)}">${escapeHTML(folder.name)}</button>
+      `).join("")}
+      ${activeFolder !== "all" && activeFolder !== "folder-general"
+        ? `<button data-action="delete-folder" data-folder="${escapeHTML(activeFolder)}" class="px-3 py-1.5 rounded-lg text-xs border border-red-500/40 text-red-400">删除此文件夹</button>` : ""}
+    `;
+
+    const posts = state.bookmarks
+      .filter(item => activeFolder === "all" || item.folderId === activeFolder)
+      .map(item => findPost(item.postId))
+      .filter(Boolean);
+
+    container.innerHTML = posts.length
+      ? posts.map(renderPost).join("")
+      : `<div class="bg-cardBlack border border-borderGreen rounded-2xl p-8 text-center text-gray-400 text-sm">暂无书签</div>`;
+  }
+
+  window.openCreateFolderModal = function () {
+    const name = prompt("请输入文件夹名称：");
+    if (!name || !name.trim()) return;
+
+    state.folders.push({ id: uid(), name: name.trim().slice(0, 20) });
+
+    saveState();
+    renderBookmarks();
+    toast("书签文件夹已创建");
+  };
+
+  function deleteFolder(folderId) {
+    if (folderId === "folder-general") return;
+    if (!confirm("删除这个文件夹？里面的书签会移到「常规书签」。")) return;
+    state.bookmarks.forEach(item => { if (item.folderId === folderId) item.folderId = "folder-general"; });
+    state.folders = state.folders.filter(f => f.id !== folderId);
+    activeFolder = "all";
+    saveState();
+    renderBookmarks();
+  }
+
+  /* ================= lists ================= */
+  function renderLists() {
+    const container = $("lists-container");
+    const timeline = $("list-timeline-container");
+    if (!container || !timeline) return;
+
+    if (activeList && !state.lists.some(item => item.id === activeList)) activeList = null;
+
+    if (activeList) {
+      container.classList.add("hidden");
+      timeline.classList.remove("hidden");
+
+      const list = state.lists.find(item => item.id === activeList);
+      const title = $("active-list-name");
+      if (title) title.textContent = list.name;
+
+      const chips = $("list-members-chips");
+      if (chips) {
+        chips.innerHTML = list.members.length
+          ? list.members.map(handle => `
+            <span class="inline-flex items-center gap-1.5 bg-techBlack border border-borderGreen rounded-full pl-3 pr-2 py-1 text-xs mono">${escapeHTML(handle)}
+              <button data-action="remove-list-member" data-id="${escapeHTML(list.id)}" data-handle="${escapeHTML(handle)}" class="text-gray-400 hover:text-red-400" aria-label="移除 ${escapeHTML(handle)}"><i class="fa-solid fa-xmark"></i></button>
+            </span>`).join("")
+          : '<span class="text-xs text-gray-500 mono">还没有成员，点击「添加成员」输入用户名（如 @neural_node）</span>';
+      }
+
+      const posts = state.posts
+        .filter(post => list.members.includes(post.handle))
+        .sort((a, b) => b.createdAt - a.createdAt);
+      renderPosts("list-posts-container", posts, "这个列表里的成员还没有发布动态");
+      return;
+    }
+
+    container.classList.remove("hidden");
+    timeline.classList.add("hidden");
+
+    container.innerHTML = state.lists.length ? state.lists.map(list => `
+      <div class="bg-cardBlack border border-borderGreen rounded-2xl p-4">
+        <div class="flex items-center justify-between gap-3">
+          <div class="min-w-0">
+            <h3 class="font-bold text-neonGreen truncate">${escapeHTML(list.name)}</h3>
+            <p class="text-xs text-gray-400 mt-1 break-words">${escapeHTML(list.description || "")}</p>
+            <span class="text-[10px] text-gray-500 mono">${list.members.length} 个成员</span>
+          </div>
+          <div class="flex gap-2 flex-shrink-0">
+            <button data-action="open-list" data-id="${escapeHTML(list.id)}" class="text-xs border border-borderGreen rounded-lg px-3 py-1.5 text-neonGreen">打开</button>
+            <button data-action="delete-list" data-id="${escapeHTML(list.id)}" class="text-xs border border-borderGreen rounded-lg px-3 py-1.5 text-gray-400 hover:text-red-400" aria-label="删除列表"><i class="fa-solid fa-trash-can"></i></button>
+          </div>
+        </div>
+      </div>
+    `).join("") : `<div class="bg-cardBlack border border-borderGreen rounded-2xl p-8 text-center text-gray-400 text-sm">还没有列表，点右上角「新建列表」</div>`;
+  }
+
+  window.openCreateListModal = function () {
+    const name = prompt("列表名称：");
+    if (!name || !name.trim()) return;
+    const description = prompt("列表简介（可选）：") || "";
+
+    state.lists.push({ id: uid(), name: name.trim().slice(0, 30), description: description.trim().slice(0, 100), members: [] });
+    saveState();
+    renderLists();
+    toast("列表已创建");
+  };
+
+  window.openListTimeline = function (id) {
+    activeList = id;
+    renderLists();
+  };
+
+  window.closeListTimeline = function () {
+    activeList = null;
+    renderLists();
+  };
+
+  window.addListMember = function () {
+    const list = state.lists.find(item => item.id === activeList);
+    if (!list) return;
+    let handle = (prompt("输入要添加的用户名（例如 @neural_node）：") || "").trim();
+    if (!handle) return;
+    if (!handle.startsWith("@")) handle = "@" + handle;
+    if (!/^@[A-Za-z0-9_]{2,20}$/.test(handle)) return toast("用户名只能包含字母、数字和下划线。", "error");
+    if (list.members.includes(handle)) return toast("已经在列表里了。", "error");
+
+    list.members.push(handle);
+    saveState();
+    renderLists();
+  };
+
+  function deleteList(id) {
+    if (!confirm("确定删除这个列表吗？")) return;
+    state.lists = state.lists.filter(item => item.id !== id);
+    if (activeList === id) activeList = null;
+    saveState();
+    renderLists();
+  }
+
+  /* ================= videos ================= */
+  function renderVideos() {
+    const container = $("videos-container");
+    if (!container) return;
+
+    const posts = state.posts
+      .filter(post => (post.media || []).some(m => m.type === "video" || (m.type === "embed" && SAFE_EMBED.test(m.url || ""))))
+      .sort((a, b) => b.createdAt - a.createdAt);
+
+    if (!posts.length) {
+      container.innerHTML = `
+        <div class="md:col-span-2 bg-cardBlack border border-borderGreen rounded-2xl p-8 text-center text-gray-400 text-sm">
+          <i class="fa-solid fa-film text-2xl mb-3 text-neonGreen"></i>
+          <p>还没有视频动态。点击「发布视频」，粘贴 mp4 直链、YouTube 或 B 站链接。</p>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = posts.map(post => {
+      const video = post.media.find(m => m.type === "video" || m.type === "embed");
+      const player = video.type === "video"
+        ? `<video controls preload="metadata" playsinline class="w-full aspect-video bg-black" src="${escapeHTML(video.url)}"></video>`
+        : `<iframe src="${escapeHTML(video.url)}" title="视频" loading="lazy" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" class="w-full aspect-video"></iframe>`;
+      return `
+        <article class="bg-cardBlack border border-borderGreen rounded-2xl overflow-hidden" data-post-id="${escapeHTML(post.id)}">
+          ${player}
+          <div class="p-3">
+            <p class="text-sm break-words line-clamp-2">${escapeHTML(post.content || "（无文字）")}</p>
+            <div class="text-xs text-gray-500 mono mt-1">${escapeHTML(post.author)} · ${formatTime(post.createdAt)}</div>
+          </div>
+        </article>`;
+    }).join("");
+  }
+
+  /* ================= profile ================= */
+  function renderProfilePosts() {
+    const posts = state.posts
+      .filter(post => post.handle === state.profile.handle)
+      .sort((a, b) => b.createdAt - a.createdAt);
+    renderPosts("profile-posts-container", posts, "你还没有发布过动态");
+  }
+
+  window.openEditProfile = function () {
+    const p = state.profile;
+    profileDraft = {};
+
+    showModal("profile-modal", "编辑资料", `
+      <div class="space-y-3 text-sm">
+        <label class="block"><span class="text-xs text-gray-400 mono">昵称</span>
+          <input id="ep-name" maxlength="20" value="${escapeHTML(p.name)}" class="mt-1 w-full bg-techBlack border border-borderGreen rounded-lg px-3 py-2 outline-none focus:border-neonGreen"></label>
+        <label class="block"><span class="text-xs text-gray-400 mono">用户名（以 @ 开头，字母数字下划线）</span>
+          <input id="ep-handle" maxlength="21" value="${escapeHTML(p.handle)}" class="mt-1 w-full bg-techBlack border border-borderGreen rounded-lg px-3 py-2 outline-none focus:border-neonGreen"></label>
+        <label class="block"><span class="text-xs text-gray-400 mono">简介</span>
+          <textarea id="ep-bio" rows="3" maxlength="160" class="mt-1 w-full bg-techBlack border border-borderGreen rounded-lg px-3 py-2 outline-none focus:border-neonGreen resize-none">${escapeHTML(p.bio)}</textarea></label>
+        <label class="block"><span class="text-xs text-gray-400 mono">所在地</span>
+          <input id="ep-location" maxlength="30" value="${escapeHTML(p.location)}" class="mt-1 w-full bg-techBlack border border-borderGreen rounded-lg px-3 py-2 outline-none focus:border-neonGreen"></label>
+        <label class="block"><span class="text-xs text-gray-400 mono">网站（https://…）</span>
+          <input id="ep-website" type="url" maxlength="100" value="${escapeHTML(p.website)}" class="mt-1 w-full bg-techBlack border border-borderGreen rounded-lg px-3 py-2 outline-none focus:border-neonGreen"></label>
+        <div class="grid grid-cols-2 gap-3">
+          <label class="block border border-borderGreen rounded-lg p-3 text-center text-xs cursor-pointer hover:border-neonGreen"><i class="fa-regular fa-image mr-1"></i>更换头像
+            <input id="ep-avatar" type="file" accept="image/*" class="hidden"><span id="ep-avatar-state" class="block text-[10px] text-neonGreen mt-1"></span></label>
+          <label class="block border border-borderGreen rounded-lg p-3 text-center text-xs cursor-pointer hover:border-neonGreen"><i class="fa-regular fa-image mr-1"></i>更换封面
+            <input id="ep-banner" type="file" accept="image/*" class="hidden"><span id="ep-banner-state" class="block text-[10px] text-neonGreen mt-1"></span></label>
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="closeModal('profile-modal')" class="px-4 py-2 text-xs rounded-lg border border-borderGreen text-gray-300">取消</button>
+          <button type="button" data-action="save-profile" class="btn-primary px-5 py-2 text-xs rounded-lg">保存</button>
+        </div>
+      </div>`);
+  };
+
+  async function pickProfileImage(input, key, opts) {
+    const file = input.files?.[0];
+    input.value = "";
+    if (!file) return;
+    try {
+      profileDraft[key] = await readImage(file, opts);
+      const label = $(`ep-${key}-state`);
+      if (label) label.textContent = "已选择，保存后生效";
+    } catch (error) {
+      toast(error.message, "error");
+    }
+  }
+
+  function saveProfile() {
+    const name = $("ep-name").value.trim();
+    let handle = $("ep-handle").value.trim();
+    const bio = $("ep-bio").value.trim();
+    const location = $("ep-location").value.trim();
+    const website = $("ep-website").value.trim();
+
+    if (!name) return toast("昵称不能为空。", "error");
+    if (!handle.startsWith("@")) handle = "@" + handle;
+    if (!/^@[A-Za-z0-9_]{2,20}$/.test(handle)) return toast("用户名需为 2-20 位字母、数字或下划线。", "error");
+    if (website && !isSafeHttp(website)) return toast("网站需要以 http:// 或 https:// 开头。", "error");
+
+    const old = state.profile;
+    if (handle !== old.handle && state.posts.some(post => post.handle === handle)) {
+      return toast("这个用户名已被其他账号使用。", "error");
+    }
+
+    const snapshot = structuredClone(state);
+    state.profile = {
+      ...old, name, handle, bio, location, website,
+      avatar: profileDraft.avatar || old.avatar,
+      banner: profileDraft.banner || old.banner
+    };
+    state.posts.forEach(post => {
+      if (post.handle === old.handle) {
+        post.author = name;
+        post.handle = handle;
+        post.avatar = state.profile.avatar;
+      }
+    });
+
+    if (!saveState()) {
+      state = snapshot;
+      return;
+    }
+
+    closeModal("profile-modal");
+    updateProfileUI();
+    refresh();
+    toast("资料已更新");
+  }
+
+  /* ================= right column ================= */
+  function renderRightColumn() {
+    const trends = $("trends-container");
+    if (trends) {
+      const counts = {};
+      state.posts.forEach(post => {
+        (post.content.match(/#[\u4e00-\u9fa5\w-]+/g) || []).forEach(tag => {
+          counts[tag.slice(1)] = (counts[tag.slice(1)] || 0) + 1;
+        });
+      });
+      const top = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 6);
+      trends.innerHTML = top.length
+        ? top.map(([tag, n]) => `<button data-action="hashtag" data-tag="${escapeHTML(tag)}" class="w-full flex items-center justify-between hover:text-neonGreen"><span class="hashtag">#${escapeHTML(tag)}</span><span class="text-xs text-gray-500 mono">${n} 条</span></button>`).join("")
+        : '<div class="text-xs text-gray-500 mono">发布带 #话题 的动态，这里会出现热门话题</div>';
+    }
+
+    const suggest = $("suggest-container");
+    if (suggest) {
+      const list = SUGGESTED.filter(s => !state.following.includes(s.handle) && s.handle !== state.profile.handle);
+      suggest.innerHTML = list.length
+        ? list.map(s => `
+          <div class="flex items-center gap-3">
+            <img src="${escapeHTML(s.avatar)}" data-name="${escapeHTML(s.author)}" class="avatar-img w-9 h-9 rounded-lg object-cover border border-borderGreen" alt="">
+            <div class="min-w-0 flex-1"><div class="text-sm font-semibold truncate">${escapeHTML(s.author)}</div><div class="text-xs text-gray-500 mono truncate">${escapeHTML(s.handle)}</div></div>
+            <button data-action="follow" data-handle="${escapeHTML(s.handle)}" class="text-xs border border-neonGreen text-neonGreen rounded-full px-3 py-1">关注</button>
+          </div>`).join("")
+        : '<div class="text-xs text-gray-500 mono">暂时没有更多推荐</div>';
+    }
+  }
+
+  /* ================= render all / init ================= */
+  function renderAll() {
+    updateProfileUI();
+    renderPosts();
+    renderVideos();
+    renderBookmarks();
+    renderNotifications();
+    renderLists();
+    renderProfilePosts();
+    renderRightColumn();
+    updateNotificationBadge();
+  }
+
+  function handleHash() {
+    const match = location.hash.match(/^#post-(.+)$/);
+    if (!match) return;
+    const id = decodeURIComponent(match[1]);
+    if (!findPost(id)) return toast("这条动态不存在或已被删除。", "error");
+
+    activeFeedTab = "recommend";
+    switchFeedTab("recommend");
+    switchTab("feed");
+    requestAnimationFrame(() => {
+      const el = [...document.querySelectorAll("[data-post-id]")].find(node => node.dataset.postId === id);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        el.classList.add("flash");
+      }
+    });
+  }
+
+  // 所有动态按钮统一用事件委托，避免把数据拼进 onclick（防止被导入的数据注入脚本）
+  document.addEventListener("click", e => {
+    const el = e.target.closest("[data-action]");
+    if (!el) return;
+    const { action, id, handle, index, tag, folder, accent } = el.dataset;
+
+    switch (action) {
+      case "like": likePost(id); break;
+      case "bookmark": bookmarkPost(id); break;
+      case "repost": repostPost(id); break;
+      case "comment": openComments(id); break;
+      case "share": sharePost(id); break;
+      case "delete-post": deletePost(id); break;
+      case "follow": toggleFollow(handle); break;
+      case "vote": votePoll(id, Number(index)); break;
+      case "hashtag": {
+        const input = $("global-search-input");
+        if (input) input.value = `#${tag}`;
+        handleGlobalSearch(`#${tag}`);
+        break;
+      }
+      case "remove-image": removeUploadedImage(Number(index)); break;
+      case "pick-folder": closeModal("folder-pick-modal"); addBookmark(id, folder); break;
+      case "submit-comment": submitComment(id); break;
+      case "select-folder": activeFolder = folder; renderBookmarks(); break;
+      case "delete-folder": deleteFolder(folder); break;
+      case "open-list": openListTimeline(id); break;
+      case "delete-list": deleteList(id); break;
+      case "remove-list-member": {
+        const list = state.lists.find(item => item.id === id);
+        if (list) { list.members = list.members.filter(m => m !== handle); saveState(); renderLists(); }
+        break;
+      }
+      case "set-accent":
+        state.settings.accent = accent;
+        saveState();
+        applySettings();
+        syncSettingsForm();
+        break;
+      case "save-profile": saveProfile(); break;
+      case "insert-emoji": insertEmoji(el.dataset.emoji); break;
+    }
+  });
+
+  document.addEventListener("change", e => {
+    const t = e.target;
+    if (t.id === "setting-theme") { state.settings.theme = t.value; saveState(); applySettings(); }
+    else if (t.id === "setting-density") { state.settings.density = t.value; saveState(); applySettings(); }
+    else if (t.id === "setting-muted") { state.settings.muted = t.checked; saveState(); }
+    else if (t.id === "ep-avatar") pickProfileImage(t, "avatar", { maxW: 256, maxH: 256, cover: true, quality: 0.85 });
+    else if (t.id === "ep-banner") pickProfileImage(t, "banner", { maxW: 1200, maxH: 400, cover: true, quality: 0.8 });
+  });
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") {
+      const modals = document.querySelectorAll("[data-modal]");
+      if (modals.length) modals[modals.length - 1].remove();
+      else closeMobileDrawer();
+    }
+    if (e.key === "Enter" && !e.isComposing && e.target.id === "comment-input") {
+      e.preventDefault();
+      submitComment(document.querySelector('[data-action="submit-comment"]').dataset.id);
+    }
+    if ((e.ctrlKey || e.metaKey) && e.key === "Enter" && e.target.id === "new-post-content") {
+      e.preventDefault();
+      publishPost();
+    }
+  });
+
+  // 另一个标签页修改了数据时同步
+  window.addEventListener("storage", e => {
+    if (e.key !== STORAGE_KEY) return;
+    state = loadState();
+    applySettings();
+    renderAll();
+  });
+
+  window.addEventListener("hashchange", handleHash);
+
+  function init() {
+    $("nav-desktop").innerHTML = navHTML();
+    $("nav-drawer").innerHTML = navHTML();
+    $("nav-bottom").innerHTML = bottomNavHTML();
+    $("emoji-grid").innerHTML = EMOJIS.map(emoji =>
+      `<button type="button" data-action="insert-emoji" data-emoji="${emoji}" class="text-xl w-9 h-9 rounded-lg hover:bg-darkGreenCard" aria-label="插入 ${emoji}">${emoji}</button>`
+    ).join("");
+
+    const input = $("new-post-content");
+    if (input) input.value = state.draft || "";
+    updateCounter();
+
+    applySettings();
+    renderAll();
+    switchTab("feed");
+    handleHash();
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
