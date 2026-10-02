@@ -8,7 +8,7 @@ const { URL } = require('url');
 
 const PORT = Number(process.env.PORT || 8080);
 const ROOT = __dirname;
-const PUBLIC = path.join(ROOT, 'public');
+const PUBLIC = ROOT;
 const DATA = path.join(ROOT, 'data');
 const UPLOADS = path.join(ROOT, 'uploads');
 const DB_PATH = path.join(DATA, 'db.json');

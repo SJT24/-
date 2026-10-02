@@ -1,0 +1,12 @@
+手机上传说明
+
+只需上传这3个文件到 GitHub 仓库根目录：
+1. package.json
+2. server.js
+3. index.html
+
+不要建 public 文件夹。
+Render 设置：
+- Build Command：留空
+- Start Command：node server.js
+- Runtime：Node
