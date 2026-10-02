@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>善鸡通AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Noto+Sans+SC:wght@400;500;700&display=swap');
+    body { font-family: 'Noto Sans SC', sans-serif; background: #050b08; color: #e7eeea; }
+    .font-geek { font-family: Orbitron, sans-serif; }
+    .on { color: #00FF66; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div id="app" class="max-w-6xl mx-auto md:grid md:grid-cols-[220px_minmax(0,600px)_280px] min-h-screen"></div>
+  <div id="toast" class="fixed bottom-20 md:bottom-6 left-1/2 -translate-x-1/2 z-50 hidden px-4 py-2 rounded-full bg-[#00FF66] text-[#050b08] text-sm font-bold"></div>
+  <script>
+    const $ = (sel) => document.querySelector(sel);
+    let token = localStorage.getItem('sjt_token') || '';
+    let me = null;
+    let ui = { view: 'home', tab: 'forYou', query: '', profileId: null, postId: null, communityId: null, listId: null, compose: null };
+    let live = null;
+
+    function toast(t) {
+      const el = $('#toast'); el.textContent = t; el.classList.remove('hidden');
+      clearTimeout(toast._t); toast._t = setTimeout(() => el.classList.add('hidden'), 1600);
+    }
+    async function api(path, opts) {
+      opts = opts || {};
+      const headers = Object.assign({ Authorization: token ? 'Bearer ' + token : '' }, opts.headers || {});
+      if (opts.json) { headers['Content-Type'] = 'application/json'; opts.body = JSON.stringify(opts.json); }
+      const res = await fetch(path, { method: opts.method || 'GET', headers, body: opts.body });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || '请求失败');
+      return data;
+    }
+    function esc(s) { return String(s ?? '').replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>').replace(/"/g,'"'); }
+    function fmt(text) {
+      return esc(text).replace(/(#[^\s#]+)/g, '<button data-act="tag" data-tag="$1" class="text-[#00FF66]">$1</button>')
+        .replace(/@([a-z0-9_]+)/g, '<button data-act="handle" data-handle="$1" class="text-[#00FF66]">@$1</button>')
+        .replace(/`([^`]+)`/g, '<code class="px-1 rounded bg-black/40 text-[#CCFF00]">$1</code>');
+    }
+    function ago(ts) {
+      const s = Math.max(1, (Date.now() - ts) / 1000);
+      if (s < 60) return Math.floor(s) + '秒';
+      if (s < 3600) return Math.floor(s / 60) + '分钟';
+      if (s < 86400) return Math.floor(s / 3600) + '小时';
+      return Math.floor(s / 86400) + '天';
+    }
+    function avatar(u) {
+      if (!u) return '<div class="w-10 h-10 rounded-full bg-[#1b3826]"></div>';
+      if (u.avatar) return '<img src="' + esc(u.avatar) + '" class="w-10 h-10 rounded-full object-cover border border-[#1b3826]">';
+      return '<div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#00FF66] to-[#CCFF00] text-[#050b08] flex items-center justify-center font-bold">' + esc((u.name || '?')[0]) + '</div>';
+    }
+    function mediaHtml(media) {
+      if (!media || !media.length) return '';
+      return '<div class="mt-3 grid gap-1 ' + (media.length > 1 ? 'grid-cols-2' : '') + '">' + media.map(m => m.type === 'video'
+        ? '<video src="' + esc(m.url) + '" controls playsinline class="w-full max-h-80 rounded-2xl bg-black"></video>'
+        : '<img src="' + esc(m.url) + '" class="w-full max-h-80 object-cover rounded-2xl">').join('') + '</div>';
+    }
+    function postHtml(p) {
+      if (!p || !p.author) return '';
+      return '<article class="px-4 py-3 border-b border-[#1b3826]">' +
+        '<div class="flex gap-3"><button data-act="profile" data-id="' + p.author.id + '">' + avatar(p.author) + '</button>' +
+        '<div class="min-w-0 flex-1"><button data-act="profile" data-id="' + p.author.id + '" class="text-sm"><b>' + esc(p.author.name) + '</b> <span class="text-[#8b9a92]">@' + esc(p.author.handle) + ' · ' + ago(p.time) + '</span></button>' +
+        '<button data-act="open" data-id="' + p.id + '" class="block text-left w-full whitespace-pre-wrap mt-1">' + fmt(p.content) + '</button>' +
+        mediaHtml(p.media) +
+        (p.poll ? '<div class="mt-2 space-y-1">' + p.poll.options.map((o, i) => '<button data-act="vote" data-id="' + p.id + '" data-idx="' + i + '" class="w-full text-left text-sm border border-[#1b3826] rounded-xl px-3 py-2">' + esc(o.text) + ' · ' + o.votes.length + '</button>').join('') + '</div>' : '') +
+        (p.quote ? '<button data-act="open" data-id="' + p.quote.id + '" class="mt-2 w-full text-left border border-[#1b3826] rounded-2xl p-3 text-sm"><b>' + esc(p.quote.author?.name || '') + '</b><div>' + fmt(p.quote.content) + '</div></button>' : '') +
+        '<div class="flex gap-5 mt-3 text-[#8b9a92] text-sm">' +
+          '<button data-act="reply" data-id="' + p.id + '"><i class="fa-regular fa-comment"></i> ' + p.replies + '</button>' +
+          '<button data-act="repost" data-id="' + p.id + '" class="' + (p.reposted ? 'text-[#00FF66]' : '') + '"><i class="fa-solid fa-retweet"></i> ' + p.repostCount + '</button>' +
+          '<button data-act="like" data-id="' + p.id + '" class="' + (p.liked ? 'text-[#00FF66]' : '') + '"><i class="fa-solid fa-heart"></i> ' + p.likeCount + '</button>' +
+          '<button data-act="bookmark" data-id="' + p.id + '" class="' + (p.bookmarked ? 'text-[#CCFF00]' : '') + '"><i class="fa-regular fa-bookmark"></i></button>' +
+          '<span><i class="fa-solid fa-chart-simple"></i> ' + p.views + '</span></div></div></div></article>';
+    }
+
+    function shell(main, rail) {
+      const nav = [['home','fa-house','主页'],['explore','fa-magnifying-glass','探索'],['communities','fa-users','社群'],['lists','fa-list','列表'],['notifications','fa-bell','通知'],['bookmarks','fa-bookmark','书签'],['profile','fa-user','我的']];
+      return '<aside class="hidden md:flex flex-col sticky top-0 h-screen p-3 border-r border-[#1b3826]">' +
+        '<div class="font-geek text-lg px-3 mb-4 text-[#00FF66]">善鸡通AI</div>' +
+        nav.map(([id, icon, label]) => '<button data-act="nav" data-view="' + id + '" class="text-left px-3 py-3 rounded-full hover:bg-white/5 ' + (ui.view === id ? 'on' : '') + '"><i class="fa-solid ' + icon + ' w-6"></i> ' + label + '</button>').join('') +
+        '<button data-act="compose" class="mt-3 mx-2 py-3 rounded-full bg-[#00FF66] text-[#050b08] font-bold">发帖</button>' +
+        (me ? '<div class="mt-auto px-3 text-sm"><b>' + esc(me.name) + '</b><div class="text-[#8b9a92]">@' + esc(me.handle) + '</div><button data-act="logout" class="text-xs text-[#8b9a92] mt-1">退出</button></div>' : '') +
+      '</aside><main class="min-h-screen border-x border-[#1b3826] pb-16 md:pb-0">' + main + '</main>' +
+      '<aside class="hidden md:block p-4">' + (rail || '') + '</aside>' +
+      '<nav class="md:hidden fixed bottom-0 inset-x-0 bg-[#050b08] border-t border-[#1b3826] flex justify-around py-3">' +
+        nav.slice(0, 5).map(([id, icon]) => '<button data-act="nav" data-view="' + id + '" class="' + (ui.view === id ? 'text-[#00FF66]' : '') + '"><i class="fa-solid ' + icon + '"></i></button>').join('') +
+      '</nav>' + composeHtml();
+    }
+    function composeHtml() {
+      if (!ui.compose) return '';
+      return '<div class="fixed inset-0 z-40 bg-black/70 flex items-start justify-center md:pt-10"><div class="bg-[#050b08] w-full md:max-w-lg md:rounded-2xl border border-[#1b3826] p-4">' +
+        '<div class="flex justify-between mb-3"><button data-act="close">取消</button><button data-act="send" class="px-4 py-1 rounded-full bg-[#00FF66] text-[#050b08] font-bold">发布</button></div>' +
+        '<textarea id="text" rows="4" class="w-full bg-transparent text-lg focus:outline-none" placeholder="有什么新鲜事？"></textarea>' +
+        '<input id="files" type="file" accept="image/*,video/mp4,video/webm" multiple class="text-xs">' +
+        '<div class="flex gap-3 mt-2 text-sm text-[#8b9a92]"><label>社群 ID <input id="cid" class="bg-transparent border-b border-[#1b3826] w-16" placeholder="可选"></label><button data-act="poll" class="text-[#CCFF00]">加投票</button></div>' +
+        '<div id="poll" class="hidden mt-2 space-y-1"><input id="pq" placeholder="问题" class="w-full bg-[#0b1610] border border-[#1b3826] rounded px-2 py-1 text-sm"><input class="opt w-full bg-[#0b1610] border border-[#1b3826] rounded px-2 py-1 text-sm" placeholder="选项1"><input class="opt w-full bg-[#0b1610] border border-[#1b3826] rounded px-2 py-1 text-sm" placeholder="选项2"></div>' +
+      '</div></div>';
+    }
+
+    async function render() {
+      if (!me && token) { try { me = (await api('/api/me')).user; } catch (e) { token = ''; localStorage.removeItem('sjt_token'); } }
+      if (!me) return renderAuth();
+      connect();
+      if (ui.view === 'home') return renderHome();
+      if (ui.view === 'explore') return renderExplore();
+      if (ui.view === 'communities') return renderCommunities();
+      if (ui.view === 'lists') return renderLists();
+      if (ui.view === 'notifications') return renderNotes();
+      if (ui.view === 'bookmarks') return renderBookmarks();
+      if (ui.view === 'profile') return renderProfile();
+      if (ui.view === 'post') return renderPost();
+      return renderHome();
+    }
+    function renderAuth() {
+      $('#app').className = '';
+      $('#app').innerHTML = '<div class="min-h-screen flex items-center justify-center p-4"><form id="auth" class="w-full max-w-sm border border-[#1b3826] rounded-2xl p-6 bg-[#0b1610]"><div class="font-geek text-2xl text-[#00FF66] mb-1">善鸡通AI</div><p class="text-sm text-[#8b9a92] mb-4">公网账号 · 推荐 · 视频 · 社群 · 实时</p>' +
+        '<input name="name" placeholder="显示名（注册时填写）" class="w-full mb-2 bg-[#050b08] border border-[#1b3826] rounded-xl px-3 py-2">' +
+        '<input name="handle" placeholder="账号，3-20 位字母数字" class="w-full mb-2 bg-[#050b08] border border-[#1b3826] rounded-xl px-3 py-2" required>' +
+        '<input name="password" type="password" placeholder="密码，至少 6 位" class="w-full mb-4 bg-[#050b08] border border-[#1b3826] rounded-xl px-3 py-2" required>' +
+        '<div class="flex gap-2"><button type="button" data-mode="login" class="flex-1 py-2 rounded-full border border-[#00FF66]">登录</button><button type="button" data-mode="register" class="flex-1 py-2 rounded-full bg-[#00FF66] text-[#050b08] font-bold">注册</button></div>' +
+        '<p id="authMsg" class="text-xs text-red-400 mt-3 min-h-4"></p>' +
+        '<p class="text-xs text-[#8b9a92] mt-3">不要直接双击 html 或 zip。先运行 start.bat / start.sh，再用浏览器打开 http://localhost:8080</p></form></div>';
+      if (location.protocol === 'file:') {
+        $('#authMsg').textContent = '当前是本地文件，登录请求发不出去。请先启动 server.js。';
+      }
+      $('#auth').onsubmit = (e) => e.preventDefault();
+      $('#auth').querySelectorAll('button[data-mode]').forEach(btn => {
+        btn.onclick = async () => {
+          const fd = new FormData($('#auth'));
+          const mode = btn.dataset.mode;
+          $('#authMsg').textContent = mode === 'register' ? '正在注册…' : '正在登录…';
+          try {
+            const data = await api('/api/' + mode, { method: 'POST', json: { handle: fd.get('handle'), password: fd.get('password'), name: fd.get('name') } });
+            token = data.token;
+            me = data.user;
+            localStorage.setItem('sjt_token', token);
+            $('#app').className = 'max-w-6xl mx-auto md:grid md:grid-cols-[220px_minmax(0,600px)_280px] min-h-screen';
+            render();
+          } catch (err) {
+            $('#authMsg').textContent = err.message;
+            toast(err.message);
+          }
+        };
+      });
+    }
+    async function renderHome() {
+      const data = await api('/api/feed?mode=' + ui.tab);
+      const trends = await api('/api/trends').catch(() => ({ trends: [] }));
+      $('#app').innerHTML = shell(
+        '<header class="sticky top-0 bg-[#050b08]/90 backdrop-blur border-b border-[#1b3826] grid grid-cols-2 text-center"><button data-act="tab" data-tab="forYou" class="py-4 ' + (ui.tab==='forYou'?'on border-b-2 border-[#00FF66]':'') + '">为你推荐</button><button data-act="tab" data-tab="following" class="py-4 ' + (ui.tab==='following'?'on border-b-2 border-[#00FF66]':'') + '">正在关注</button></header>' +
+        '<div class="px-4 py-2 text-xs text-[#8b9a92]">推荐分 = 新鲜度衰减 × 互动 × 关注/话题/社群加权。新帖经实时通道推送。</div>' +
+        data.posts.map(postHtml).join('') || '<div class="p-8 text-center text-[#8b9a92]">还没有帖子，发第一条。</div>',
+        '<div class="border border-[#1b3826] rounded-2xl p-3"><div class="font-geek text-sm mb-2">趋势</div>' + (trends.trends.map(t => '<button data-act="tag" data-tag="' + esc(t.tag) + '" class="block py-1">' + esc(t.tag) + '</button>').join('') || '发带 #话题 的帖子后出现') + '</div>'
+      );
+      bind();
+    }
+    async function renderExplore() {
+      const data = await api('/api/feed?q=' + encodeURIComponent(ui.query));
+      const users = await api('/api/users?q=' + encodeURIComponent(ui.query));
+      $('#app').innerHTML = shell('<header class="p-3 border-b border-[#1b3826]"><input id="q" value="' + esc(ui.query) + '" placeholder="搜索" class="w-full bg-[#0b1610] border border-[#1b3826] rounded-full px-4 py-2"></header>' +
+        users.users.map(u => '<button data-act="profile" data-id="' + u.id + '" class="w-full flex gap-3 px-4 py-3 border-b border-[#1b3826] text-left">' + avatar(u) + '<span><b>' + esc(u.name) + '</b><div class="text-sm text-[#8b9a92]">@' + esc(u.handle) + '</div></span></button>').join('') +
+        data.posts.map(postHtml).join(''));
+      bind();
+      const q = $('#q'); if (q) q.onkeydown = (e) => { if (e.key === 'Enter') { ui.query = q.value; ui.view = 'explore'; render(); } };
+    }
+    async function renderCommunities() {
+      const data = await api('/api/communities');
+      let posts = '';
+      if (ui.communityId) posts = (await api('/api/feed?mode=community&id=' + ui.communityId)).posts.map(postHtml).join('');
+      $('#app').innerHTML = shell('<header class="p-4 border-b border-[#1b3826] font-bold flex justify-between">社群 <button data-act="new-community" class="text-sm text-[#00FF66]">创建</button></header>' +
+        data.communities.map(c => '<div class="px-4 py-3 border-b border-[#1b3826] flex justify-between gap-3"><button data-act="community" data-id="' + c.id + '" class="text-left"><b>' + esc(c.name) + '</b><div class="text-sm text-[#8b9a92]">' + esc(c.description) + ' · ' + c.memberCount + ' 人</div></button><button data-act="join" data-id="' + c.id + '" class="text-sm px-3 rounded-full border border-[#00FF66]">' + (c.joined ? '已加入' : '加入') + '</button></div>').join('') +
+        posts);
+      bind();
+    }
+    async function renderLists() {
+      const data = await api('/api/lists');
+      let posts = '';
+      if (ui.listId) posts = (await api('/api/feed?mode=list&id=' + ui.listId)).posts.map(postHtml).join('');
+      $('#app').innerHTML = shell('<header class="p-4 border-b border-[#1b3826] font-bold flex justify-between">列表 <button data-act="new-list" class="text-sm text-[#00FF66]">创建</button></header>' +
+        data.lists.map(l => '<button data-act="list" data-id="' + l.id + '" class="w-full text-left px-4 py-3 border-b border-[#1b3826]"><b>' + esc(l.name) + '</b><div class="text-sm text-[#8b9a92]">' + l.memberIds.length + ' 个账号' + (l.private ? ' · 私密' : '') + '</div></button>').join('') +
+        '<div class="p-4 text-xs text-[#8b9a92]">打开某个用户主页可加入当前选中的列表。</div>' + posts);
+      bind();
+    }
+    async function renderNotes() {
+      const data = await api('/api/notifications');
+      await api('/api/notifications/read', { method: 'POST' });
+      const label = { like: '喜欢了你的帖子', reply: '回复了你', repost: '转发了你', follow: '关注了你' };
+      $('#app').innerHTML = shell('<header class="p-4 border-b border-[#1b3826] font-bold">通知</header>' +
+        (data.notifications.map(n => '<div class="px-4 py-3 border-b border-[#1b3826] text-sm"><b>' + esc(n.from?.name || '节点') + '</b> ' + (label[n.type] || n.type) + '<div class="text-[#8b9a92]">' + esc(n.text || '') + '</div></div>').join('') || '<div class="p-8 text-center text-[#8b9a92]">暂无通知</div>'));
+      bind();
+    }
+    async function renderBookmarks() {
+      const data = await api('/api/feed?mode=bookmarks');
+      $('#app').innerHTML = shell('<header class="p-4 border-b border-[#1b3826] font-bold">书签</header>' + data.posts.map(postHtml).join(''));
+      bind();
+    }
+    async function renderProfile() {
+      const id = ui.profileId || me.id;
+      const info = await api('/api/users/' + id);
+      const posts = await api('/api/feed?mode=user&id=' + id);
+      const u = info.user;
+      $('#app').innerHTML = shell('<header class="p-4 border-b border-[#1b3826] font-bold">' + esc(u.name) + '</header><div class="p-4">' +
+        '<div class="text-xl font-bold">' + esc(u.name) + '</div><div class="text-[#8b9a92]">@' + esc(u.handle) + '</div><p class="my-2">' + esc(u.bio || '这个节点还没有简介') + '</p>' +
+        '<div class="text-sm text-[#8b9a92]">' + info.followers + ' 关注者 · 兴趣 ' + esc((u.interests || []).join(' ')) + '</div>' +
+        '<div class="flex gap-2 mt-3">' + (u.id === me.id ? '<button data-act="edit" class="px-3 py-1 rounded-full border border-[#00FF66] text-sm">编辑资料</button>' : '<button data-act="follow" data-id="' + u.id + '" class="px-3 py-1 rounded-full bg-[#00FF66] text-[#050b08] text-sm font-bold">' + (info.following ? '已关注' : '关注') + '</button><button data-act="add-list" data-id="' + u.id + '" class="px-3 py-1 rounded-full border border-[#1b3826] text-sm">加入列表</button>') + '</div></div>' +
+        posts.posts.map(postHtml).join(''));
+      bind();
+    }
+    async function renderPost() {
+      const data = await api('/api/posts/' + ui.postId);
+      $('#app').innerHTML = shell('<header class="p-3 border-b border-[#1b3826]"><button data-act="nav" data-view="home"><i class="fa-solid fa-arrow-left"></i> 帖子</button></header>' + postHtml(data.post) + data.replies.map(postHtml).join(''));
+      bind();
+    }
+
+    function bind() {
+      $('#app').onclick = async (e) => {
+        const t = e.target.closest('[data-act]');
+        if (!t) return;
+        const act = t.dataset.act;
+        try {
+          if (act === 'nav') { ui.view = t.dataset.view; if (ui.view === 'profile') ui.profileId = me.id; render(); }
+          else if (act === 'tab') { ui.tab = t.dataset.tab; render(); }
+          else if (act === 'compose') { ui.compose = {}; $('#app').insertAdjacentHTML('beforeend', composeHtml()); bind(); }
+          else if (act === 'close') { ui.compose = null; render(); }
+          else if (act === 'poll') $('#poll').classList.toggle('hidden');
+          else if (act === 'send') await send();
+          else if (act === 'open') { ui.view = 'post'; ui.postId = t.dataset.id; render(); }
+          else if (act === 'profile') { ui.view = 'profile'; ui.profileId = t.dataset.id; render(); }
+          else if (act === 'like') { await api('/api/posts/' + t.dataset.id + '/like', { method: 'POST' }); render(); }
+          else if (act === 'bookmark') { await api('/api/posts/' + t.dataset.id + '/bookmark', { method: 'POST' }); render(); }
+          else if (act === 'repost') { await api('/api/posts/' + t.dataset.id + '/repost', { method: 'POST' }); toast('已切换转发'); render(); }
+          else if (act === 'reply') { ui.compose = { replyTo: Number(t.dataset.id) }; $('#app').insertAdjacentHTML('beforeend', composeHtml()); bind(); }
+          else if (act === 'vote') { await api('/api/posts/' + t.dataset.id + '/vote', { method: 'POST', json: { index: Number(t.dataset.idx) } }); render(); }
+          else if (act === 'follow') { await api('/api/follow', { method: 'POST', json: { userId: Number(t.dataset.id) } }); render(); }
+          else if (act === 'tag') { ui.query = t.dataset.tag; ui.view = 'explore'; render(); }
+          else if (act === 'handle') { const users = await api('/api/users?q=' + t.dataset.handle); const u = users.users.find(x => x.handle === t.dataset.handle); if (u) { ui.view = 'profile'; ui.profileId = u.id; render(); } }
+          else if (act === 'logout') { token = ''; me = null; localStorage.removeItem('sjt_token'); if (live) live.close(); render(); }
+          else if (act === 'new-community') { const name = prompt('社群名'); if (!name) return; const description = prompt('简介') || ''; await api('/api/communities', { method: 'POST', json: { name, description } }); render(); }
+          else if (act === 'join') { await api('/api/communities/' + t.dataset.id + '/join', { method: 'POST' }); render(); }
+          else if (act === 'community') { ui.communityId = t.dataset.id; render(); }
+          else if (act === 'new-list') { const name = prompt('列表名'); if (!name) return; await api('/api/lists', { method: 'POST', json: { name, private: confirm('设为私密？') } }); render(); }
+          else if (act === 'list') { ui.listId = t.dataset.id; render(); }
+          else if (act === 'add-list') {
+            if (!ui.listId) return toast('先在列表页点开一个列表');
+            await api('/api/lists/' + ui.listId + '/members', { method: 'POST', json: { userId: Number(t.dataset.id) } });
+            toast('已更新列表成员');
+          }
+          else if (act === 'edit') {
+            const bio = prompt('简介', me.bio || ''); if (bio == null) return;
+            const avatarUrl = prompt('头像图片 URL，可留空', me.avatar || '') || '';
+            me = (await api('/api/me', { method: 'PATCH', json: { bio, avatar: avatarUrl } })).user;
+            render();
+          }
+        } catch (err) { toast(err.message); }
+      };
+    }
+    async function send() {
+      const text = $('#text').value.trim();
+      const files = Array.from($('#files').files || []);
+      let media = [];
+      if (files.length) {
+        const fd = new FormData();
+        files.slice(0, 4).forEach(f => fd.append('file', f));
+        const res = await fetch('/api/upload', { method: 'POST', headers: { Authorization: 'Bearer ' + token }, body: fd });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || '上传失败');
+        media = data.media;
+      }
+      let poll = null;
+      if ($('#poll') && !$('#poll').classList.contains('hidden')) {
+        const opts = Array.from(document.querySelectorAll('.opt')).map(i => i.value.trim()).filter(Boolean);
+        if ($('#pq').value && opts.length >= 2) poll = { question: $('#pq').value, options: opts };
+      }
+      await api('/api/posts', { method: 'POST', json: { content: text, media, poll, replyTo: ui.compose.replyTo || null, communityId: $('#cid').value || null } });
+      ui.compose = null;
+      toast('已发布');
+      render();
+    }
+    let streamOn = false;
+    function connect() {
+      if (streamOn || !token) return;
+      streamOn = true;
+      fetch('/api/stream', { headers: { Authorization: 'Bearer ' + token } }).then(async (res) => {
+        if (!res.ok || !res.body) { streamOn = false; return; }
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let buf = '';
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          buf += decoder.decode(value, { stream: true });
+          const chunks = buf.split('\n\n');
+          buf = chunks.pop();
+          chunks.forEach(block => {
+            const line = block.split('\n').find(l => l.startsWith('data: '));
+            if (!line) return;
+            try {
+              const event = JSON.parse(line.slice(6));
+              if (event.type === 'post' && ui.view === 'home') toast('时间线有新帖');
+              if (event.type === 'notification') toast('新通知');
+            } catch (err) {}
+          });
+        }
+        streamOn = false;
+      }).catch(() => { streamOn = false; });
+    }
+    render();
+  </script>
+</body>
+</html>
