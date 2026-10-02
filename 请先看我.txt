@@ -1,7 +1,0 @@
-不要双击 zip，也不要双击 index.html。
-
-1. 安装 Node.js LTS：https://nodejs.org
-2. 把整个 shanji-public 文件夹解压出来
-3. Windows 双击 start.bat；macOS / Linux 在该目录执行 sh start.sh
-4. 浏览器打开 http://localhost:8080
-5. 先点注册。账号只能是英文、数字、下划线，至少 3 位；密码至少 6 位。注册成功会自动登录。
